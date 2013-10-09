@@ -23,8 +23,8 @@ public class OnePtXOver implements Operator {
         int size = parents.getPopulationSize();
 
         for (int i = 0; i < size / 2; i++) {
-            ArrayIndividual p1 = (ArrayIndividual) parents.get(rng.nextInt(size));
-            ArrayIndividual p2 = (ArrayIndividual) parents.get(rng.nextInt(size));
+            ArrayIndividual p1 = (ArrayIndividual) parents.get(2*i);
+            ArrayIndividual p2 = (ArrayIndividual) parents.get(2*i + 1);
 
             ArrayIndividual o1 = (ArrayIndividual) p1.clone();
             ArrayIndividual o2 = (ArrayIndividual) p2.clone();

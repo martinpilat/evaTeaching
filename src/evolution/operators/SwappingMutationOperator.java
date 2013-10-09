@@ -24,7 +24,7 @@ public class SwappingMutationOperator implements Operator {
 
         for (int i = 0; i < size; i++) {
 
-            ArrayIndividual p1 = (ArrayIndividual) parents.get(rng.nextInt(size));
+            ArrayIndividual p1 = (ArrayIndividual) parents.get(i);
             ArrayIndividual o1 = (ArrayIndividual) p1.clone();
 
             if (rng.nextDouble() < mutationProbability) {

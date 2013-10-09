@@ -24,7 +24,7 @@ public class IntegerMutation implements Operator {
 
         for (int i = 0; i < size; i++) {
 
-            IntegerIndividual p1 = (IntegerIndividual) parents.get(rng.nextInt(size));
+            IntegerIndividual p1 = (IntegerIndividual) parents.get(i);
             IntegerIndividual o1 = (IntegerIndividual) p1.clone();
 
             if (rng.nextDouble() < mutationProbability) {

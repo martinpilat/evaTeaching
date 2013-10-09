@@ -22,6 +22,7 @@ public class EvolutionaryAlgorithm {
     double eliteSize = 0.0;
     FitnessEvaluator fitness;
     Replacement replacement;
+    int generationNo = 0;
 
     /**
      * Initializes an empty evolutionary algorithm. Replacement is set to the
@@ -135,10 +136,18 @@ public class EvolutionaryAlgorithm {
         if (fitness == null)
             throw new RuntimeException("No fitness function defined");
 
+        generationNo++;
+
         fitness.evaluate(pop);
 
-        Population parents = pop;
+        if (generationNo == 1) {
+            DetailsLogger.logInitialPopulation(pop);
+        }
 
+        DetailsLogger.logNewGeneration(generationNo);
+        DetailsLogger.logNewMatingSelection();
+
+        Population parents = pop;
 
         Population matingPool = new Population();
 
@@ -149,6 +158,9 @@ public class EvolutionaryAlgorithm {
                 Population sel = new Population();
                 matingSelectors.get(i).select(toSelect, parents, sel);
                 matingPool.addAll((Population) sel.clone());
+                for (int j = matingPool.getPopulationSize() - toSelect; j < matingPool.getPopulationSize(); j++) {
+                    matingPool.get(j).setLogNotes(matingSelectors.get(i).getClass().getCanonicalName());
+                }
             }
 
             int missing = parents.getPopulationSize() - matingPool.getPopulationSize();
@@ -156,15 +168,31 @@ public class EvolutionaryAlgorithm {
                 Population sel = new Population();
                 matingSelectors.get(matingSelectors.size() - 1).select(toSelect, parents, sel);
                 matingPool.addAll((Population) sel.clone());
+                for (int i = matingPool.getPopulationSize() - missing; i < matingPool.getPopulationSize(); i++) {
+                    matingPool.get(i).setLogNotes(matingSelectors.get(matingSelectors.size() - 1).getClass().getCanonicalName());
+                }
             }
         } else {
             matingPool = (Population) parents.clone();
+            matingPool.shuffle();
+            for (int i = 0; i < matingPool.getPopulationSize(); i++) {
+                matingPool.get(i).setLogNotes("none:shuffle");
+            }
         }
+
+        DetailsLogger.logSelectedPart(parents);
+
+
+        fitness.evaluate(matingPool); //just for logging
+        DetailsLogger.logMatingPool(matingPool);
 
         Population offspring = null;
         for (Operator o : operators) {
+            DetailsLogger.logNewOperator(o.getClass().getCanonicalName());
             offspring = new Population();
             o.operate(matingPool, offspring);
+            fitness.evaluate(offspring); //just for logging
+            DetailsLogger.logOffspring(offspring);
             matingPool = offspring;
         }
 
@@ -172,9 +200,12 @@ public class EvolutionaryAlgorithm {
 
         Population selected = new Population();
 
+        DetailsLogger.logNewEnvironmentalSelection();
+
         ArrayList<Individual> sortedOld = parents.getSortedIndividuals();
         for (int i = 0; i < eliteSize * parents.getPopulationSize(); i++) {
             selected.add(sortedOld.get(i));
+            sortedOld.get(i).setLogNotes(sortedOld.get(i).getLogNotes() + " none:elitism");
         }
 
         Population combined = replacement.replace(parents, offspring);
@@ -195,6 +226,8 @@ public class EvolutionaryAlgorithm {
             environmentalSelectors.get(environmentalSelectors.size() - 1).select(toSelect, combined, sel);
             selected.addAll((Population) sel.clone());
         }
+
+        DetailsLogger.logSelectedPart(combined);
 
         pop.clear();
         pop.addAll(selected);

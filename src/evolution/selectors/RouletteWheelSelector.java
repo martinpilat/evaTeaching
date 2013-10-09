@@ -35,6 +35,7 @@ public class RouletteWheelSelector implements Selector {
                 sum += fitnesses[j];
                 if (sum > ball) {
                     to.add((Individual) from.get(j).clone());
+                    from.get(j).setLogNotes(from.get(j).getLogNotes() + " " + this.getClass().getCanonicalName());
                     break;
                 }
             }

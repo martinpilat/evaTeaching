@@ -9,6 +9,17 @@ public abstract class Individual implements Cloneable {
 
     double fitnessValue;
     double objectiveValue;
+    String logNotes;           //for logging, these will appear in the detailed log
+
+    public String getLogNotes() {
+        if (logNotes == null)
+            return "";
+        return logNotes;
+    }
+
+    public void setLogNotes(String logNotes) {
+        this.logNotes = logNotes;
+    }
 
     /**
      * Randomly initializes the individual.
@@ -66,6 +77,7 @@ public abstract class Individual implements Cloneable {
         try {
             Individual newInd = (Individual) super.clone();
             newInd.fitnessValue = -Double.MAX_VALUE;
+            newInd.logNotes = null;
             return newInd;
         } catch (Exception e) {
             e.printStackTrace();

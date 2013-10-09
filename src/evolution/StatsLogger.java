@@ -2,9 +2,10 @@ package evolution;
 
 import evolution.individuals.Individual;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Vector;
 
 /**
  * This class serves as a logging interface for logging of the progress of fitness
@@ -71,6 +72,53 @@ public class StatsLogger {
             e.printStackTrace();
         }
 
+    }
+
+    public static void processResults(String logPrefix, String resultsName, int repeats, int maxGen, int popSize) {
+        Vector<Vector<Double>> bestFitnesses = new Vector<Vector<Double>>();
+        try {
+            for (int i = 0; i < repeats; i++) {
+                Vector<Double> column = new Vector<Double>();
+
+                BufferedReader in = new BufferedReader(new FileReader(
+                        logPrefix + "." + i));
+                String line = null;
+                while ((line = in.readLine()) != null) {
+                    double best = Double.parseDouble(line.split(" ")[0]);
+                    column.add(best);
+                }
+
+                bestFitnesses.add(column);
+            }
+
+            FileWriter out = new FileWriter(resultsName);
+
+            for (int j = 0; j < maxGen; j++) {
+                double sum = 0;
+                Vector<Double> nums = new Vector<Double>();
+                for (int i = 0; i < repeats; i++) {
+                    double current = bestFitnesses.get(i).get(j);
+                    nums.add(current);
+                    sum += current;
+                }
+
+                double avg = sum / repeats;
+
+                Collections.sort(nums);
+                double min = nums.get(0);
+                double max = nums.get(nums.size()-1);
+                double q1 = nums.get(nums.size()/4);
+                double q3 = nums.get(3*nums.size()/4);
+
+                out.write((j+2)*popSize + " " + min + " " + q1 + " " + avg + " " + q3 + " " + max
+                        + System.getProperty("line.separator"));
+
+            }
+            out.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

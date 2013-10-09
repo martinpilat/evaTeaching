@@ -24,7 +24,7 @@ public class BitFlipMutation implements Operator {
 
         for (int i = 0; i < size; i++) {
 
-            BooleanIndividual p1 = (BooleanIndividual) parents.get(rng.nextInt(size));
+            BooleanIndividual p1 = (BooleanIndividual) parents.get(i);
             BooleanIndividual o1 = (BooleanIndividual) p1.clone();
 
             if (rng.nextDouble() < mutationProbability) {

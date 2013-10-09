@@ -1,4 +1,4 @@
-package evolution.cv1;
+package evolution.sga;
 
 import evolution.FitnessFunction;
 import evolution.individuals.BooleanIndividual;
@@ -21,7 +21,7 @@ public class ExampleFitnessFunction implements FitnessFunction {
                 fitness += 1.0;
         }
 
-        ind.setObjectiveValue(fitness); //nastavuje hodnotu optimalizovaneho kriteria, nemusi se rovnat primo fitness
+        ind.setObjectiveValue(fitness); //nastavuje hodnotu optimalizovaneho kriteria, nemusi se (obecne) rovnat primo fitness
 
         return fitness;
     }

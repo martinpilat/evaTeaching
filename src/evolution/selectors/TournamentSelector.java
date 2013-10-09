@@ -17,10 +17,14 @@ public class TournamentSelector implements Selector {
             int i1 = rng.nextInt(from.getPopulationSize());
             int i2 = rng.nextInt(from.getPopulationSize());
 
-            if ((from.get(i1).getFitnessValue() > from.get(i2).getFitnessValue()) && rng.nextDouble() < 0.8)
+            if ((from.get(i1).getFitnessValue() > from.get(i2).getFitnessValue()) && rng.nextDouble() < 0.8) {
                 to.add((Individual) from.get(i1).clone());
-            else
+                from.get(i1).setLogNotes(from.get(i1).getLogNotes() + " " + this.getClass().getCanonicalName());
+            }
+            else {
                 to.add((Individual) from.get(i2).clone());
+                from.get(i2).setLogNotes(from.get(i2).getLogNotes() + " " + this.getClass().getCanonicalName());
+            }
         }
     }
 
