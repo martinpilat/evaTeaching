@@ -1,6 +1,5 @@
 package evolution.sga;
 
-import com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl;
 import evolution.*;
 import evolution.individuals.BooleanIndividual;
 import evolution.individuals.Individual;
@@ -8,7 +7,6 @@ import evolution.operators.BitFlipMutation;
 import evolution.operators.OnePtXOver;
 import evolution.selectors.RouletteWheelSelector;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -88,7 +86,7 @@ public class Main {
 
         Population pop = new Population();
         pop.setPopulationSize(popSize);
-        pop.setSampleIndividual(new BooleanIndividual(25));
+        pop.setSampleIndividual(new BooleanIndividual(dimension));
         pop.createRandomInitialPopulation();
 
         EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
@@ -96,8 +94,8 @@ public class Main {
         ea.setFitnessFunction(new ExampleFitnessFunction());
 
         ea.addMatingSelector(new RouletteWheelSelector());
-        ea.addOperator(new OnePtXOver(0.8));
-        ea.addOperator(new BitFlipMutation(0.2, 0.04));
+        ea.addOperator(new OnePtXOver(xoverProb));
+        ea.addOperator(new BitFlipMutation(mutProb, mutProbPerBit));
         ea.addEnvironmentalSelector(new RouletteWheelSelector());
 
         try {
@@ -107,7 +105,7 @@ public class Main {
             for (int i = 0; i < maxGen; i++) {
                 ea.evolve(pop);
                 ArrayList<Individual> sorted = pop.getSortedIndividuals();
-                System.err.println(sorted.get(0));
+                System.err.println("fitness: " + sorted.get(0).getFitnessValue() + " " + sorted.get(0));
 
                 StatsLogger.logFitness(pop, out);
                 StatsLogger.logObjective(pop, progOut);

@@ -1,8 +1,8 @@
 package evolution;
 
-import evolution.individuals.Individual;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.ProcessingInstruction;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -15,7 +15,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
@@ -23,11 +22,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Created with IntelliJ IDEA.
- * User: marti_000
+ * User: Martin Pilat
  * Date: 7.10.13
  * Time: 15:55
- * To change this template use File | Settings | File Templates.
  */
 public class DetailsLogger {
 
@@ -56,6 +53,10 @@ public class DetailsLogger {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
         rootEle.setAttribute("date", sdf.format(now));
         doc.appendChild(rootEle);
+        doc.setXmlStandalone(true);
+        ProcessingInstruction pi = doc.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"eva.xsl\"");
+        doc.insertBefore(pi, rootEle);
+
     }
 
     public static void logParams(Properties prop) {
