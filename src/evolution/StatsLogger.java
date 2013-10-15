@@ -80,13 +80,14 @@ public class StatsLogger {
             for (int i = 0; i < repeats; i++) {
                 Vector<Double> column = new Vector<Double>();
 
-                BufferedReader in = new BufferedReader(new FileReader(
-                        logPrefix + "." + i));
-                String line = null;
+                BufferedReader in = new BufferedReader(new FileReader(logPrefix + "." + i));
+
+                String line;
                 while ((line = in.readLine()) != null) {
                     double best = Double.parseDouble(line.split(" ")[0]);
                     column.add(best);
                 }
+                in.close();
 
                 bestFitnesses.add(column);
             }

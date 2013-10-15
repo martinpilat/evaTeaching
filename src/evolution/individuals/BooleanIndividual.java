@@ -2,8 +2,6 @@ package evolution.individuals;
 
 import evolution.RandomNumberGenerator;
 
-import java.util.Arrays;
-
 /**
  * Individual represented using an array of booleans.
  *
@@ -57,10 +55,7 @@ public class BooleanIndividual extends ArrayIndividual {
     public void randomInitialization() {
 
         for (int i = 0; i < length; i++) {
-            if (RandomNumberGenerator.getInstance().nextDouble() > 0.5)
-                genes[i] = true;
-            else
-                genes[i] = false;
+            genes[i] = RandomNumberGenerator.getInstance().nextDouble() > 0.5;
         }
 
     }
