@@ -41,7 +41,7 @@ public class IntegerIndividual extends ArrayIndividual {
     }
 
     public String toString() {
-        return "fitness: " + getFitnessValue() + " " + Arrays.toString(genes);
+        return Arrays.toString(genes);
     }
 
     /**

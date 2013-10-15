@@ -35,8 +35,21 @@ public class DetailsLogger {
     static Element genEle;
     static Element mateEle;
     static Element opEle;
+    static boolean disableLog = false;
+
+    public static void disableLog() {
+        disableLog = true;
+    }
+
+    public static void enableLog() {
+        disableLog = false;
+    }
 
     public static void startNewLog(String fileName) {
+
+        if (disableLog)
+            return;
+
         DetailsLogger.fileName = fileName;
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -61,6 +74,9 @@ public class DetailsLogger {
 
     public static void logParams(Properties prop) {
 
+        if (disableLog)
+            return;
+
         Element props = doc.createElement("properties");
         for (String name : prop.stringPropertyNames()) {
             Element e = doc.createElement("property");
@@ -73,6 +89,10 @@ public class DetailsLogger {
     }
 
     static void logPopulation(Population pop, Element el) {
+
+        if (disableLog)
+            return;
+
         for (int i = 0; i < pop.getPopulationSize(); i++) {
             Element ind = doc.createElement("individual");
             Element e = doc.createElement("chromosome");
@@ -91,6 +111,9 @@ public class DetailsLogger {
 
     public static void logInitialPopulation(Population pop) {
 
+        if (disableLog)
+            return;
+
         Element init = doc.createElement("initial-population");
         rootEle.appendChild(init);
         logPopulation(pop, init);
@@ -98,23 +121,38 @@ public class DetailsLogger {
 
     public static void logNewGeneration(int generationNumber) {
 
+        if (disableLog)
+            return;
+
         genEle = doc.createElement("generation");
         genEle.setAttribute("number", Integer.toString(generationNumber));
         rootEle.appendChild(genEle);
     }
 
     public static void logNewMatingSelection() {
+
+        if (disableLog)
+            return;
+
         mateEle = doc.createElement("mating-selection");
         genEle.appendChild(mateEle);
     }
 
     public static void logMatingPool(Population pop) {
+
+        if (disableLog)
+            return;
+
         Element pool = doc.createElement("mating-pool");
         genEle.appendChild(pool);
         logPopulation(pop, pool);
     }
 
     public static void logSelectedPart(Population pop) {
+
+        if (disableLog)
+            return;
+
         for (int i = 0; i < pop.getPopulationSize(); i++) {
             Element ind = doc.createElement("individual");
             ind.setAttribute("selected-by", pop.get(i).getLogNotes());
@@ -132,21 +170,36 @@ public class DetailsLogger {
     }
 
     public static void logNewOperator(String operatorName) {
+
+        if (disableLog)
+            return;
+
         opEle = doc.createElement("operator");
         opEle.setAttribute("name", operatorName);
         genEle.appendChild(opEle);
     }
 
     public static void logOffspring(Population pop) {
+
+        if (disableLog)
+            return;
+
         logPopulation(pop, opEle);
     }
 
     public static void logNewEnvironmentalSelection() {
+
+        if (disableLog)
+            return;
+
         mateEle = doc.createElement("environmental-selection");
         genEle.appendChild(mateEle);
     }
 
     public static void writeLog() {
+
+        if (disableLog)
+            return;
 
         try {
             Transformer tr = TransformerFactory.newInstance().newTransformer();

@@ -1,4 +1,4 @@
-package evolution.cv2;
+package evolution.binPacking;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;

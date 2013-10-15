@@ -1,4 +1,4 @@
-package evolution.cv2;
+package evolution.binPacking;
 
 import evolution.FitnessFunction;
 import evolution.individuals.Individual;
@@ -47,7 +47,9 @@ public class HromadkyFitness implements FitnessFunction {
             }
         }
 
-        ind.setObjectiveValue(max - min);
+        ind.setObjectiveValue(max - min);    // tohle doporucuji zachovat
+
+        //sem muzete vlozit vlastni vypocet fitness, muzete samozrejme vyuzit spocitane hmotnosti hromadek
 
         return 1 / (max - min);
     }
