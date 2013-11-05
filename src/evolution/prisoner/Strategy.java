@@ -1,4 +1,4 @@
-package evolution.cv4;
+package evolution.prisoner;
 
 public abstract class Strategy {
 

@@ -1,4 +1,4 @@
-package evolution.cv5.simulation;
+package evolution.prisoner.simulation;
 
 import evolution.Population;
 import evolution.individuals.Individual;

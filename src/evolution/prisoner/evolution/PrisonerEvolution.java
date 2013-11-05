@@ -1,10 +1,12 @@
-package evolution.cv5.evolution;
+package evolution.prisoner.evolution;
 
+import evolution.DetailsLogger;
 import evolution.EvolutionaryAlgorithm;
 import evolution.Population;
-import evolution.cv4.Result;
-import evolution.cv4.Strategy;
-import evolution.cv4.Strategy.Move;
+import evolution.operators.IntegerMutation;
+import evolution.prisoner.Result;
+import evolution.prisoner.Strategy;
+import evolution.prisoner.Strategy.Move;
 import evolution.individuals.Individual;
 import evolution.individuals.IntegerIndividual;
 import evolution.operators.OnePtXOver;
@@ -20,34 +22,37 @@ public class PrisonerEvolution {
     static int maxGen;
     static int popSize;
     static double xoverProb;
-    static String logFilePrefix;
-    static String resultsFile;
-    static String progFilePrefix;
-    static String progFile;
-    static String bestPrefix;
-    static int repeats = 1;
+    static double mutProb;
+    static double mutProbPerBit;
     static ArrayList<Strategy> strategies;
 
     public static void main(String[] args) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
         Properties prop = new Properties();
         try {
-            InputStream propIn = new FileInputStream("ga-cv5-evolution.properties");
+            InputStream propIn = new FileInputStream("properties/ga-prisoner-evolution.properties");
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        maxGen = Integer.parseInt(prop.getProperty("max_generations", "20"));
-        popSize = Integer.parseInt(prop.getProperty("population_size", "30"));
-        xoverProb = Double.parseDouble(prop.getProperty("xover_prob", "0.8"));
-        progFilePrefix = prop.getProperty("prog_file_prefix", "prog.log");
-        progFile = prop.getProperty("prog_file_results", "progress.log");
-        bestPrefix = prop.getProperty("best_ind_prefix", "best");
-        logFilePrefix = prop.getProperty("log_filename_prefix", "ga.log");
-        resultsFile = prop.getProperty("results_filename", "ga.log");
+        prop = new Properties();
+        try {
+            InputStream propIn = new FileInputStream("properties/ga-binPacking.properties");
+            prop.load(propIn);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        String inputFile = prop.getProperty("input_file", "input-evolution.txt");
+        DetailsLogger.disableLog();
+
+        maxGen = Integer.parseInt(prop.getProperty("ea.maxGenerations", "20"));
+        popSize = Integer.parseInt(prop.getProperty("ea.popSize", "30"));
+        xoverProb = Double.parseDouble(prop.getProperty("ea.xoverProb", "0.8"));
+        mutProb = Double.parseDouble(prop.getProperty("ea.mutProb", "0.05"));
+        mutProbPerBit = Double.parseDouble(prop.getProperty("ea.mutProbPerBit", "0.04"));
+
+        String inputFile = prop.getProperty("prob.inputFile", "resources/input-evolution.txt");
 
         strategies = new ArrayList<Strategy>();
 
@@ -55,7 +60,7 @@ public class PrisonerEvolution {
             BufferedReader in = new BufferedReader(new FileReader(inputFile));
             String line;
             while ((line = in.readLine()) != null) {
-                Strategy s = (Strategy) Class.forName("evolution.cv4.strategies." + line).newInstance();
+                Strategy s = (Strategy) Class.forName("evolution.prisoner.strategies." + line).newInstance();
                 strategies.add(s);
             }
         } catch (FileNotFoundException e) {
@@ -179,6 +184,7 @@ public class PrisonerEvolution {
         EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
         ea.setFitnessFunction(new PrisonerFitness(strategies));
         ea.addOperator(new OnePtXOver(xoverProb));
+        ea.addOperator(new IntegerMutation(mutProb, mutProbPerBit));
         ea.addEnvironmentalSelector(new RouletteWheelSelector());
 
         for (int i = 0; i < maxGen; i++) {

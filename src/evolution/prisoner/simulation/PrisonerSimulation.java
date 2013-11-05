@@ -1,8 +1,9 @@
-package evolution.cv5.simulation;
+package evolution.prisoner.simulation;
 
+import evolution.DetailsLogger;
 import evolution.EvolutionaryAlgorithm;
 import evolution.Population;
-import evolution.cv4.Strategy;
+import evolution.prisoner.Strategy;
 import evolution.individuals.Individual;
 import evolution.individuals.IntegerIndividual;
 import evolution.selectors.TournamentSelector;
@@ -16,12 +17,6 @@ public class PrisonerSimulation {
 
     static int maxGen;
     static int popSize;
-    static String logFilePrefix;
-    static String resultsFile;
-    static String progFilePrefix;
-    static String progFile;
-    static String bestPrefix;
-    static int repeats = 1;
     static int maxEncounters;
 
     static ArrayList<Strategy> strategies;
@@ -31,22 +26,19 @@ public class PrisonerSimulation {
 
         Properties prop = new Properties();
         try {
-            InputStream propIn = new FileInputStream("ga-cv5-simulation.properties");
+            InputStream propIn = new FileInputStream("properties/ga-prisoner-simulation.properties");
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        maxGen = Integer.parseInt(prop.getProperty("max_generations", "20"));
-        //popSize = Integer.parseInt(prop.getProperty("population_size", "30"));
-        progFilePrefix = prop.getProperty("prog_file_prefix", "prog.log");
-        progFile = prop.getProperty("prog_file_results", "progress.log");
-        bestPrefix = prop.getProperty("best_ind_prefix", "best");
-        logFilePrefix = prop.getProperty("log_filename_prefix", "ga.log");
-        resultsFile = prop.getProperty("results_filename", "ga.log");
-        maxEncounters = Integer.parseInt(prop.getProperty("max_encounters", "20"));
+        DetailsLogger.disableLog();
 
-        String inputFile = prop.getProperty("input_file", "input-simulation.txt");
+        maxGen = Integer.parseInt(prop.getProperty("ea.maxGenerations", "20"));
+        popSize = Integer.parseInt(prop.getProperty("ea.popSize", "30"));
+        maxEncounters = Integer.parseInt(prop.getProperty("sim.encounters", "20"));
+
+        String inputFile = prop.getProperty("prob.inputFile", "resources/input-simulation.txt");
 
         strategies = new ArrayList<Strategy>();
         strategyCounts = new ArrayList<Integer>();
@@ -60,7 +52,7 @@ public class PrisonerSimulation {
                 String[] parts = line.split("[ ]+");
                 String name = parts[0];
                 int count = Integer.parseInt(parts[1]);
-                Strategy s = (Strategy) Class.forName("evolution.cv4.strategies." + name).newInstance();
+                Strategy s = (Strategy) Class.forName("evolution.prisoner.strategies." + name).newInstance();
                 strategies.add(s);
                 strategyCounts.add(count);
             }

@@ -1,6 +1,6 @@
-package evolution.cv4;
+package evolution.prisoner;
 
-import evolution.cv4.Strategy.Move;
+import evolution.prisoner.Strategy.Move;
 
 public class Result {
 

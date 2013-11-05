@@ -1,7 +1,7 @@
-package evolution.cv4.strategies;
+package evolution.prisoner.strategies;
 
-import evolution.cv4.Result;
-import evolution.cv4.Strategy;
+import evolution.prisoner.Result;
+import evolution.prisoner.Strategy;
 
 public class Random extends Strategy {
 

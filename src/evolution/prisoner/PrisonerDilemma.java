@@ -1,19 +1,16 @@
-package evolution.cv4;
+package evolution.prisoner;
 
 import evolution.RandomNumberGenerator;
-import evolution.cv4.Strategy.Move;
+import evolution.prisoner.Strategy.Move;
 
 import java.io.File;
 
 public class PrisonerDilemma {
 
-    /**
-     * @param args
-     */
     public static void main(String[] args) {
 
         //change this to wherever your .class files are
-        File dir = new File("build/classes/evolution/cv4/strategies");
+        File dir = new File("out/production/evaTeaching/evolution/prisoner/strategies/");
 
         String[] stratNames = dir.list();
 
@@ -23,7 +20,7 @@ public class PrisonerDilemma {
 
             String name = stratNames[i].substring(0, stratNames[i].length() - ".class".length());
 
-            name = "evolution.cv4.strategies." + name;
+            name = "evolution.prisoner.strategies." + name;
 
             try {
                 Strategy s = (Strategy) Class.forName(name).newInstance();
@@ -79,9 +76,9 @@ public class PrisonerDilemma {
 
                     }
 
-                    //System.err.println(sc1 + ":" + sc2);
-                    //System.err.println("\t" + str1);
-                    //System.err.println("\t" + str2);
+                    System.err.println(sc1 + ":" + sc2);
+                    System.err.println("\t" + str1);
+                    System.err.println("\t" + str2);
 
                     scores[i] += sc1;
                     scores[j] += sc2;

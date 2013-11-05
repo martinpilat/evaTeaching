@@ -1,7 +1,7 @@
-package evolution.cv5.evolution;
+package evolution.prisoner.evolution;
 
-import evolution.cv4.Result;
-import evolution.cv4.Strategy;
+import evolution.prisoner.Result;
+import evolution.prisoner.Strategy;
 
 import java.util.ArrayList;
 import java.util.List;

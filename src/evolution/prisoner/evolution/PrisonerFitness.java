@@ -1,9 +1,9 @@
-package evolution.cv5.evolution;
+package evolution.prisoner.evolution;
 
 import evolution.FitnessFunction;
-import evolution.cv4.Result;
-import evolution.cv4.Strategy;
-import evolution.cv4.Strategy.Move;
+import evolution.prisoner.Result;
+import evolution.prisoner.Strategy;
+import evolution.prisoner.Strategy.Move;
 import evolution.individuals.Individual;
 import evolution.individuals.IntegerIndividual;
 
