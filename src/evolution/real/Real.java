@@ -1,4 +1,4 @@
-package evolution.cv6;
+package evolution.real;
 
 import evolution.EvolutionaryAlgorithm;
 import evolution.Population;
@@ -8,6 +8,7 @@ import evolution.individuals.Individual;
 import evolution.individuals.RealIndividual;
 import evolution.operators.AveragingCrossoverOperator;
 import evolution.operators.GaussianMutationOperator;
+import evolution.real.functions.ShiftedRastriginFunction;
 import evolution.selectors.RouletteWheelSelector;
 
 import java.io.*;
@@ -36,7 +37,7 @@ public class Real {
 
         Properties prop = new Properties();
         try {
-            InputStream propIn = new FileInputStream("ga-cv6.properties");
+            InputStream propIn = new FileInputStream("ga-real.properties");
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,7 +53,7 @@ public class Real {
         resultsFile = prop.getProperty("results_filename", "ga.log");
         repeats = Integer.parseInt(prop.getProperty("repeats", "10"));
         eliteSize = Double.parseDouble(prop.getProperty("elite_size", "0.1"));
-        outputDir = prop.getProperty("output_dir", "cv6");
+        outputDir = prop.getProperty("output_dir", "real");
 
         File output = new File(outputDir);
         output.mkdirs();

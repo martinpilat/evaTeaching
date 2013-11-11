@@ -1,4 +1,6 @@
-package evolution.cv6;
+package evolution.real.functions;
+
+import evolution.real.RealFunction;
 
 public class ShiftedRastriginFunction implements RealFunction {
 

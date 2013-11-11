@@ -1,4 +1,4 @@
-package evolution.cv6;
+package evolution.real;
 
 import evolution.FitnessFunction;
 import evolution.individuals.Individual;
@@ -7,7 +7,7 @@ import evolution.individuals.RealIndividual;
 public class RealFitnessFunction implements FitnessFunction {
 
     private static final long serialVersionUID = 2274261765244005248L;
-    evolution.cv6.RealFunction rf;
+    evolution.real.RealFunction rf;
 
     public RealFitnessFunction(RealFunction rf) {
         this.rf = rf;

@@ -1,4 +1,4 @@
-package evolution.cv6;
+package evolution.real;
 
 public interface RealFunction {
 

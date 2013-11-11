@@ -1,4 +1,4 @@
-package evolution.cv6;
+package evolution.real;
 
 import evolution.Population;
 import evolution.RandomNumberGenerator;
