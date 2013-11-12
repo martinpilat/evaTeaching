@@ -28,7 +28,7 @@ public class F06AttractiveSectorFunction extends RealFunction {
 
     @Override
     public double value(double[] x) {
-        double[] z = mult(Q, mult(lambda, mult(R, minus(x, xopt))));
+        double[] z = mult(Q, diagMult(lambda, mult(R, minus(x, xopt))));
         double[] s = new double[D];
 
         for (int i = 0; i < D; i++) {

@@ -18,8 +18,8 @@ public class RealFitnessFunction implements FitnessFunction {
 
         RealIndividual ri = (RealIndividual) aSubject;
         //do not change these two lines
-        double value = rf.value(ri.toDoubleArray());
-        ri.setObjectiveValue(value);
+        double value = rf.evaluate(ri.toDoubleArray());
+        ri.setObjectiveValue(-rf.getFopt() - value);
 
         return value;
     }

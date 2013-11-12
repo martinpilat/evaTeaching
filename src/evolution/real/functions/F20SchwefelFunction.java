@@ -2,6 +2,8 @@ package evolution.real.functions;
 
 import evolution.RandomNumberGenerator;
 
+import java.util.Arrays;
+
 /**
  * Created with IntelliJ IDEA.
  * User: Martin Pilat
@@ -27,40 +29,65 @@ public class F20SchwefelFunction extends RealFunction {
         onePlusMinus = createOnePlusMinus();
         xopt = new double[D];
         for (int i = 0; i < D; i++) {
-            xopt[i] = 4.2096874633 / 2.0 * onePlusMinus[i];
+            xopt[i] = 0.5 * 4.2096874633 * onePlusMinus[i];
         }
     }
 
     @Override
     public double value(double[] x) {
-        double[] xR = new double[D];
-        for (int i = 0; i < D; i++) {
-            xR[i] = 2 * x[i] * onePlusMinus[i];
-        }
+        double condition = 10.;
+        double tmp, Fadd, Fpen = 0.0, Ftrue = 0.0;
+
+        Fadd = fopt;
 
         double[] zR = new double[D];
-        zR[0] = xR[0];
-        for (int i = 0; i < D - 1; i++) {
-            zR[i + 1] = xR[i + 1] + 0.25 * (xR[i] - xopt[i]);
+        for (int i = 0; i < D; i++)
+        {
+            zR[i] = 2. * x[i];
+            if (xopt[i] < 0.)
+                zR[i] *= -1.;
         }
 
-        double[] z = mult(lambda, minus(zR, xopt));
-
-        for (int i = 0; i < D; i++) {
-            z[i] = 100 * z[i] + xopt[i];
+        double[] z = new double[D];
+        z[0] = zR[0];
+        for (int i = 1; i < D; i++)
+        {
+            z[i] = zR[i] + 0.25 * (zR[i-1] - 2. * Math.abs(xopt[i-1]));
         }
 
-        double sum = 0;
-        for (double d : z) {
-            sum += d * Math.sin(Math.sqrt(Math.abs(d)));
+        for (int i = 0; i < D; i++)
+        {
+            z[i] -= 2 * Math.abs(xopt[i]);
         }
 
-        double[] zS = new double[D];
-        for (int i = 0; i < D; i++) {
-            zS[i] = z[i] / 100.0;
+        z = diagMult(lambda, z);
+
+        for (int i = 0; i < D; i++)
+        {
+            z[i] = 100. * (z[i] + 2 * Math.abs(xopt[i]));
         }
 
-        return -1.0 / D * sum + 4.189828872724339 + 100 * fpen(zS) + fopt;
+    /* BOUNDARY HANDLING*/
+        for (int i = 0; i < D; i++)
+        {
+            tmp = Math.abs(z[i]) - 500.;
+            if (tmp > 0.)
+            {
+                Fpen += tmp * tmp;
+            }
+        }
+        Fadd += 0.01 * Fpen;
+
+    /* COMPUTATION core*/
+        for (int i = 0; i < D; i++)
+        {
+            Ftrue += z[i] * Math.sin(Math.sqrt(Math.abs(z[i])));
+        }
+        Ftrue = 0.01 * ((418.9828872724339) - Ftrue / (double)D);
+
+        Ftrue += Fadd;
+
+        return Ftrue;
     }
 
 }

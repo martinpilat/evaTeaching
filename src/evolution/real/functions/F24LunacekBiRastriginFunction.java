@@ -27,6 +27,7 @@ public class F24LunacekBiRastriginFunction extends RealFunction {
     @Override
     public void reinit() {
         onePlusMinus = createOnePlusMinus();
+        xopt = new double[D];
         for (int i = 0; i < D; i++) {
             xopt[i] = 2.5 * onePlusMinus[i];
         }
@@ -42,7 +43,7 @@ public class F24LunacekBiRastriginFunction extends RealFunction {
         for (int i = 0; i < D; i++) {
             xR[i] = 2 * Math.signum(xopt[i]) * x[i];
         }
-        double[] z = mult(Q, mult(lambda, mult(R, minus(xR, oneMu))));
+        double[] z = mult(Q, diagMult(lambda, mult(R, minus(xR, oneMu))));
 
         double sum1 = 0.0;
         double sum2 = 0.0;

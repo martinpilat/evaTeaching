@@ -26,7 +26,7 @@ public class F03RastriginFunction extends RealFunction {
 
     @Override
     public double value(double[] x) {
-        double[] z = mult(lambda, Tasy(Tosz(minus(x, xopt)), 0.2));
+        double[] z = diagMult(lambda, Tasy(Tosz(minus(x, xopt)), 0.2));
 
         double sum = 0;
         for (double d : z) {

@@ -1,19 +1,17 @@
 package evolution.real;
 
-import evolution.EvolutionaryAlgorithm;
-import evolution.Population;
-import evolution.RandomNumberGenerator;
-import evolution.StatsLogger;
+import evolution.*;
 import evolution.individuals.Individual;
 import evolution.individuals.RealIndividual;
 import evolution.operators.AveragingCrossoverOperator;
 import evolution.operators.GaussianMutationOperator;
-import evolution.real.functions.F03RastriginFunction;
+import evolution.real.functions.*;
 import evolution.selectors.RouletteWheelSelector;
+import evolution.selectors.TournamentSelector;
 
+import javax.xml.soap.Detail;
 import java.io.*;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 public class Real {
 
@@ -23,6 +21,9 @@ public class Real {
     static int maxGen;
     static int popSize;
     static int dimension;
+    static double xoverProb;
+    static double mutProb;
+    static double mutSigma;
     static String logFilePrefix;
     static String resultsFile;
     static int repeats;
@@ -32,90 +33,95 @@ public class Real {
     static String bestPrefix;
     static double eliteSize;
     static String outputDir;
+    static Properties prop;
+    static String outputDirectory;
+    static String objectiveFilePrefix;
+    static String objectiveStatsFile;
+    static String fitnessFilePrefix;
+    static String fitnessStatsFile;
+    static String detailsLogPrefix;
 
     public static void main(String[] args) {
 
-        Properties prop = new Properties();
+        prop = new Properties();
         try {
-            InputStream propIn = new FileInputStream("ga-real.properties");
+            InputStream propIn = new FileInputStream("properties/ga-real.properties");
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        dimension = Integer.parseInt(prop.getProperty("dimension", "50"));
-        maxGen = Integer.parseInt(prop.getProperty("max_generations", "2000"));
-        popSize = Integer.parseInt(prop.getProperty("population_size", "50"));
-        progFilePrefix = prop.getProperty("prog_file_prefix", "prog.log");
-        progFile = prop.getProperty("prog_file_results", "progress.log");
-        bestPrefix = prop.getProperty("best_ind_prefix", "best");
-        logFilePrefix = prop.getProperty("log_filename_prefix", "ga.log");
-        resultsFile = prop.getProperty("results_filename", "ga.log");
-        repeats = Integer.parseInt(prop.getProperty("repeats", "10"));
-        eliteSize = Double.parseDouble(prop.getProperty("elite_size", "0.1"));
-        outputDir = prop.getProperty("output_dir", "real");
+        maxGen = Integer.parseInt(prop.getProperty("ea.maxGenerations", "20"));
+        popSize = Integer.parseInt(prop.getProperty("ea.popSize", "30"));
+        xoverProb = Double.parseDouble(prop.getProperty("ea.xoverProb", "0.8"));
+        mutProb = Double.parseDouble(prop.getProperty("ea.mutProb", "0.05"));
+        mutSigma = Double.parseDouble(prop.getProperty("ea.mutSigma", "0.04"));
+        eliteSize = Double.parseDouble(prop.getProperty("ea.eliteSize", "0.1"));
 
-        File output = new File(outputDir);
-        output.mkdirs();
+        dimension = Integer.parseInt(prop.getProperty("prob.dimension", "25"));
+        repeats = Integer.parseInt(prop.getProperty("xset.repeats", "10"));
 
-        for (int i = 0; i < repeats; i++) {
-            run(i);
-        }
+        ArrayList<RealFunction> functions = new ArrayList<RealFunction>();
+        functions.add(new F01SphereFunction(dimension));
+        functions.add(new F02EllipsoidalFunction(dimension));
+        functions.add(new F03RastriginFunction(dimension));
+        functions.add(new F04BucheRastriginFunction(dimension));
+        functions.add(new F05LinearSlope(dimension));
+        functions.add(new F06AttractiveSectorFunction(dimension));
+        functions.add(new F07StepEllipsoidalFunction(dimension));
+        functions.add(new F08RosenbrockOriginalFunction(dimension));
+        functions.add(new F09RosenbrockRotatedFunction(dimension));
+        functions.add(new F10EllipsoidalRotatedFunction(dimension));
+        functions.add(new F11DiscusFunction(dimension));
+        functions.add(new F12BentCigarFunction(dimension));
+        functions.add(new F13SharpRidgeFunction(dimension));
+        functions.add(new F14DifferentPowersFunction(dimension));
+        functions.add(new F15RastriginNonseparableFunction(dimension));
+        functions.add(new F16WeierstrassFunction(dimension));
+        functions.add(new F17SchaffersF7Function(dimension));
+        functions.add(new F18SchaffersF7IllConditionedFunction(dimension));
+        functions.add(new F19CompositeGriewankRosenbrockF8F2Function(dimension));
+        functions.add(new F20SchwefelFunction(dimension));
+        functions.add(new F21GallaghersGaussian101PeaksFunction(dimension));
+        functions.add(new F22GallaghersGaussian21HiPeaksFunction(dimension));
+        functions.add(new F23KatsuuraFunction(dimension));
+        functions.add(new F24LunacekBiRastriginFunction(dimension));
 
-        processResults(logFilePrefix, resultsFile);
-        processResults(progFilePrefix, progFile);
+        DetailsLogger.disableLog();
 
-    }
+        for (RealFunction rf : functions) {
 
-    static void processResults(String logPrefix, String resultsName) {
-        Vector<Vector<Double>> bestFitnesses = new Vector<Vector<Double>>();
-        try {
+            outputDirectory = prop.getProperty("xlog.outputDirectory", "real") + System.getProperty("file.separator") + rf.getClass().getSimpleName();
+            logFilePrefix = prop.getProperty("xlog.filePrefix", "log");
+            String path = outputDirectory  + System.getProperty("file.separator") + logFilePrefix;
+            objectiveFilePrefix = path + ".objective";
+            objectiveStatsFile = path + ".objective_stats";
+            bestPrefix = path + ".best";
+            fitnessFilePrefix = path + ".fitness";
+            fitnessStatsFile = path + ".fitness_stats";
+            detailsLogPrefix = path + ".details";
+
+            File outDir = new File(outputDirectory);
+            if (!outDir.exists()) {
+                outDir.mkdirs();
+            }
+
             for (int i = 0; i < repeats; i++) {
-                Vector<Double> column = new Vector<Double>();
-
-                BufferedReader in = new BufferedReader(new FileReader(
-                        outputDir + System.getProperty("file.separator") + logPrefix + "." + i));
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    double best = Double.parseDouble(line.split(" ")[0]);
-                    column.add(best);
-                }
-
-                bestFitnesses.add(column);
+                RandomNumberGenerator.getInstance().reseed(i);
+                rf.reinit();
+                run(i, rf);
             }
 
-            FileWriter out = new FileWriter(outputDir + System.getProperty("file.separator") + resultsName);
-
-            for (int j = 0; j < maxGen; j++) {
-                double min = Double.MAX_VALUE;
-                double max = -Double.MAX_VALUE;
-                double sum = 0;
-                for (int i = 0; i < repeats; i++) {
-                    double current = bestFitnesses.get(i).get(j);
-
-                    min = Math.min(current, min);
-                    max = Math.max(current, max);
-                    sum += current;
-                }
-
-                double avg = sum / repeats;
-
-                out.write(min + " " + avg + " " + max
-                        + System.getProperty("line.separator"));
-
-            }
-            out.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
+            StatsLogger.processResults(fitnessFilePrefix, fitnessStatsFile, repeats, maxGen, popSize);
+            StatsLogger.processResults(objectiveFilePrefix, objectiveStatsFile, repeats, maxGen, popSize);
         }
+
     }
 
-    static void run(int number) {
+    static void run(int number, RealFunction rf) {
 
         try {
 
-            RandomNumberGenerator.getInstance().reseed(number);
             RealIndividual sample = new RealIndividual(dimension, -5.0, 5.0);
 
             Population pop = new Population();
@@ -125,41 +131,59 @@ public class Real {
 
             EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
             ea.addMatingSelector(new MySelector());
-            ea.addOperator(new AveragingCrossoverOperator(0.8));
-            ea.addOperator(new GaussianMutationOperator(0.1, 0.05));
-            ea.setFitnessFunction(new RealFitnessFunction(new F03RastriginFunction(dimension)));
-            ea.addEnvironmentalSelector(new RouletteWheelSelector());
+            ea.addOperator(new AveragingCrossoverOperator(xoverProb));
+            ea.addOperator(new GaussianMutationOperator(mutProb, mutSigma));
+            ea.setFitnessFunction(new RealFitnessFunction(rf));
+            ea.addEnvironmentalSelector(new TournamentSelector());
             ea.setElite(eliteSize);
 
-            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(outputDir + System.getProperty("file.separator") + logFilePrefix + "." + number));
-
-            OutputStreamWriter progOut = new OutputStreamWriter(new FileOutputStream(outputDir + System.getProperty("file.separator") + progFilePrefix + "." + number));
+            OutputStreamWriter fitnessOut = new OutputStreamWriter(new FileOutputStream(fitnessFilePrefix + "." + number));
+            OutputStreamWriter objectiveOut = new OutputStreamWriter(new FileOutputStream(objectiveFilePrefix + "." + number));
 
             for (int i = 0; i < maxGen; i++) {
                 ea.evolve(pop);
-                Double diff = (Double) pop.getSortedIndividuals().get(0).getObjectiveValue();
-                System.out.println("Generation " + i + ": " + diff);
-
-                StatsLogger.logFitness(pop, out);
-                StatsLogger.logObjective(pop, progOut);
-
-
+                if (i % 100 == 0) {
+                    RealIndividual ri = (RealIndividual)pop.getSortedIndividuals().get(0);
+                    Double diff = ri.getObjectiveValue();
+                    System.out.println("Generation " + i + ": "  + diff + " | " + printArray(ri.toDoubleArray()));
+                    System.out.println("\tGradient: " + printArray(rf.numericalDerivative(ri.toDoubleArray())));
+                }
+                StatsLogger.logFitness(pop, fitnessOut);
+                StatsLogger.logObjective(pop, objectiveOut);
             }
 
-            OutputStreamWriter bestOut = new OutputStreamWriter(
-                    new FileOutputStream(outputDir + System.getProperty("file.separator") + bestPrefix + "." + number));
+            RealIndividual ri = (RealIndividual)pop.getSortedIndividuals().get(0);
+            Double diff = ri.getObjectiveValue();
+            System.out.println("End: " + diff + " | " + printArray(ri.toDoubleArray()));
+            System.out.println("\tGradient: " + printArray(rf.numericalDerivative(ri.toDoubleArray())));
 
-            Individual bestInd = pop.getSortedIndividuals().get(0);
+            OutputStreamWriter bestOut = new OutputStreamWriter(new FileOutputStream(bestPrefix + "." + number));
 
-            bestOut.write(bestInd.toString());
+            bestOut.write("Fitness: " + ri.getFitnessValue() + "\n");
+            bestOut.write("Objective: " + ri.getObjectiveValue() + "\n");
+            bestOut.write("Individual: " + printArray(ri.toDoubleArray()) + "\n");
+            bestOut.write("Gradient: " + printArray(rf.numericalDerivative(ri.toDoubleArray())) + "\n");
+            bestOut.write("Xopt: " + printArray(rf.getXopt()) + "\n");
+            bestOut.write("Fopt: " + rf.getFopt() + "\n");
+            bestOut.write("F(Xopt): " + (-rf.evaluate(rf.getXopt())) + "\n");
 
-            out.close();
-            progOut.close();
+            fitnessOut.close();
+            objectiveOut.close();
             bestOut.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
+    }
+
+    static String printArray(double[] a) {
+        StringBuilder sb = new StringBuilder();
+
+        for (double d: a) {
+            sb.append(String.format(Locale.US, "%.5f", d) + " ");
+        }
+
+        return sb.toString();
     }
 }

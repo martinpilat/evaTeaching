@@ -25,7 +25,7 @@ public class F23KatsuuraFunction extends RealFunction {
 
     @Override
     public double value(double[] x) {
-        double[] z = mult(Q, mult(lambda, mult(R, minus(x, xopt))));
+        double[] z = mult(Q, diagMult(lambda, mult(R, minus(x, xopt))));
 
         double prod = 1.0;
         for (int i = 0; i < D; i++) {

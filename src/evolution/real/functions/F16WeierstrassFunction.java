@@ -28,7 +28,7 @@ public class F16WeierstrassFunction extends RealFunction {
 
     @Override
     public double value(double[] x) {
-        double[] z = mult(R, mult(lambda, mult(Q, Tosz(mult(R, minus(x, xopt))))));
+        double[] z = mult(R, diagMult(lambda, mult(Q, Tosz(mult(R, minus(x, xopt))))));
 
         double f0 = 0.0;
         for (int i = 0; i < 12; i++) {

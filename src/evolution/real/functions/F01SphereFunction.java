@@ -26,7 +26,7 @@ public class F01SphereFunction extends RealFunction {
     @Override
     public double value(double[] x) {
         double[] z = minus(x, xopt);
-        return norm(z) + fopt;
+        return norm2(z) + fopt;
     }
 
 }

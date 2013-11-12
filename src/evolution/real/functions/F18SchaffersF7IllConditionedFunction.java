@@ -28,7 +28,7 @@ public class F18SchaffersF7IllConditionedFunction extends RealFunction {
 
     @Override
     public double value(double[] x) {
-        double[] z = mult(lambda, mult(Q, Tasy(mult(R, minus(x, xopt)), 0.5)));
+        double[] z = diagMult(lambda, mult(Q, Tasy(mult(R, minus(x, xopt)), 0.5)));
         double[] s = new double[D - 1];
 
         for (int i = 0; i < D - 1; i++) {

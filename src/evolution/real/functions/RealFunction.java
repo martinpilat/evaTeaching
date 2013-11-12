@@ -2,6 +2,8 @@ package evolution.real.functions;
 
 import evolution.RandomNumberGenerator;
 
+import java.util.Arrays;
+
 public abstract class RealFunction {
 
     protected int D;
@@ -9,7 +11,7 @@ public abstract class RealFunction {
     protected double[] xopt;
     protected double[][] R;
     protected double[][] Q;
-    protected double[][] lambda;
+    protected double[] lambda;
     protected double[] onePlusMinus;
 
     protected RealFunction(int D) {
@@ -74,27 +76,33 @@ public abstract class RealFunction {
         xopt = new double[D];
 
         for (int i = 0; i < D; i++) {
-            xopt[i] = RandomNumberGenerator.getInstance().nextDouble() * 4 - 8;
+            xopt[i] = RandomNumberGenerator.getInstance().nextDouble() * 8.0 - 4.0;
         }
+
+        System.err.println(Arrays.toString(xopt));
     }
 
-    protected double[][] createLambda(double alpha) {
+    protected double[] createLambda(double alpha) {
 
-        double[][] lam = new double[D][D];
-
-        for (int i = 0; i < D; i++) {
-            for (int j = 0; j < D; j++) {
-                lam[i][j] = 0;
-            }
-        }
+        double[] lam = new double[D];
 
         for (int i = 0; i < D; i++) {
-            lam[i][i] = Math.pow(alpha, 0.5 * i / (D - 1));
+            lam[i] = Math.pow(alpha, 0.5 * i / (D - 1));
         }
 
         return lam;
     }
 
+    protected double[] diagMult(double[] a, double[] b) {
+
+        double[] c = new double[a.length];
+
+        for(int i =0; i < a.length; i++) {
+            c[i] = a[i]*b[i];
+        }
+
+        return c;
+    }
 
     protected double[][] getRandomRotationMatrix() {
         double[][] R = new double[D][D];
@@ -130,7 +138,7 @@ public abstract class RealFunction {
         return R;
     }
 
-    protected double[][] mult(double[][] a, double[][] b) {
+    /*protected double[][] mult(double[][] a, double[][] b) {
         double[][] c = new double[D][D];
 
         for (int i = 0; i < D; i++)
@@ -138,7 +146,7 @@ public abstract class RealFunction {
                 for (int k = 0; k < D; k++)
                     c[i][k] += a[i][k] * b[k][j];
         return c;
-    }
+    }*/
 
     protected double[] mult(double[][] a, double[] b) {
         double[] c = new double[D];
@@ -202,6 +210,33 @@ public abstract class RealFunction {
         }
 
         return o;
+    }
+
+    public double evaluate(double[] x) {
+        return -value(x);
+    }
+
+    public double getFopt() {
+        return fopt;
+    }
+
+    public double[] numericalDerivative(double[] x) {
+
+        double[] d = new double[D];
+
+        for (int i = 0; i < D; i++) {
+            double h = 0.0000001*x[i];
+            double[] xph = x.clone();
+            xph[i] += h;
+            double dx = xph[i] - x[i];
+            d[i] = (value(xph) - value(x))/dx;
+        }
+
+        return d;
+    }
+
+    public double[] getXopt() {
+        return xopt;
     }
 
     public abstract double value(double[] x);

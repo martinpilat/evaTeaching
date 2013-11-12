@@ -19,7 +19,7 @@ public class F05LinearSlope extends RealFunction {
     public void reinit() {
         xopt = createOnePlusMinus();
         for (int i = 0; i < D; i++) {
-            xopt[i] += 5;
+            xopt[i] *= 5;
         }
         double g1 = RandomNumberGenerator.getInstance().nextGaussian();
         double g2 = RandomNumberGenerator.getInstance().nextGaussian();

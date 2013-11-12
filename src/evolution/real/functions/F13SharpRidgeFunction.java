@@ -28,7 +28,7 @@ public class F13SharpRidgeFunction extends RealFunction {
 
     @Override
     public double value(double[] x) {
-        double[] z = mult(Q, mult(lambda, mult(R, minus(x, xopt))));
+        double[] z = mult(Q, diagMult(lambda, mult(R, minus(x, xopt))));
 
         double sum = 0.0;
         for (int i = 1; i < D; i++) {

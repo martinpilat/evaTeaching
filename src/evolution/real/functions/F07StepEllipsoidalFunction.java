@@ -28,7 +28,7 @@ public class F07StepEllipsoidalFunction extends RealFunction {
 
     @Override
     public double value(double[] x) {
-        double[] zC = mult(lambda, mult(R, minus(x, xopt)));
+        double[] zC = diagMult(lambda, mult(R, minus(x, xopt)));
         double[] zW = new double[D];
 
         for (int i = 0; i < D; i++) {

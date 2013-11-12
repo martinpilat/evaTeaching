@@ -28,7 +28,7 @@ public class F15RastriginNonseparableFunction extends RealFunction {
 
     @Override
     public double value(double[] x) {
-        double[] z = mult(R, mult(lambda, mult(Q, Tasy(Tosz(mult(R, minus(x, xopt))), 0.2))));
+        double[] z = mult(R, diagMult(lambda, mult(Q, Tasy(Tosz(mult(R, minus(x, xopt))), 0.2))));
 
         double sum = 0;
         for (double d : z) {
