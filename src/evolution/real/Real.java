@@ -8,7 +8,7 @@ import evolution.individuals.Individual;
 import evolution.individuals.RealIndividual;
 import evolution.operators.AveragingCrossoverOperator;
 import evolution.operators.GaussianMutationOperator;
-import evolution.real.functions.ShiftedRastriginFunction;
+import evolution.real.functions.F03RastriginFunction;
 import evolution.selectors.RouletteWheelSelector;
 
 import java.io.*;
@@ -127,7 +127,7 @@ public class Real {
             ea.addMatingSelector(new MySelector());
             ea.addOperator(new AveragingCrossoverOperator(0.8));
             ea.addOperator(new GaussianMutationOperator(0.1, 0.05));
-            ea.setFitnessFunction(new RealFitnessFunction(new ShiftedRastriginFunction()));
+            ea.setFitnessFunction(new RealFitnessFunction(new F03RastriginFunction(dimension)));
             ea.addEnvironmentalSelector(new RouletteWheelSelector());
             ea.setElite(eliteSize);
 
