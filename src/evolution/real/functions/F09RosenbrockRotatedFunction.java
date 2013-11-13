@@ -20,6 +20,7 @@ public class F09RosenbrockRotatedFunction extends RealFunction {
 
     @Override
     public void reinit() {
+        xopt = new double[D];
         double g1 = RandomNumberGenerator.getInstance().nextGaussian();
         double g2 = RandomNumberGenerator.getInstance().nextGaussian();
         fopt = Math.min(1000.0, Math.max(-1000.0, (Math.round(100.0 * 100.0 * g1 / g2) / 100.0)));
