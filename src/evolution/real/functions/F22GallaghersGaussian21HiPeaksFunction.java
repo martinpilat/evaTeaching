@@ -76,6 +76,7 @@ public class F22GallaghersGaussian21HiPeaksFunction extends RealFunction {
             ytmp[i] = RandomNumberGenerator.getInstance().nextDouble() * 4 - 8;
         }
         y.add(ytmp);
+        xopt = ytmp;
         for (int j = 0; j < 20; j++) {
             ytmp = new double[D];
             for (int i = 0; i < D; i++) {

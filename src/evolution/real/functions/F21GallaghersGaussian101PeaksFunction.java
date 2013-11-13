@@ -75,6 +75,7 @@ public class F21GallaghersGaussian101PeaksFunction extends RealFunction {
             ytmp[i] = RandomNumberGenerator.getInstance().nextDouble() * 4 - 8;
         }
         y.add(ytmp);
+        xopt = ytmp;
         for (int j = 0; j < 100; j++) {
             ytmp = new double[D];
             for (int i = 0; i < D; i++) {
