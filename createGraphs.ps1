@@ -10,9 +10,18 @@
     [string]$limit
 )
 
-$plot = "set term svg solid lw 2
+if ($logScale.Equals("")) {
+    $plot = "unset logscale
+    "
+}
+else {
+    $plot = "set logscale $logScale
+    "
+}
+    
+
+$plot = $plot + "set term svg solid lw 2
 		set output `'$output`'
-		set logscale $logScale
 		set grid
 		set title '$title'
 		set xlabel 'Function evaluations (/$scale)'

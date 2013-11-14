@@ -50,9 +50,15 @@ while [ "$1" != "" ]; do
     shift
 done
 
-plot="set term svg solid lw 1\n\
+if [ -z $logScale ]; then
+    plot="unset logscale\n"
+else
+    plot="set logscale $logScale\n"
+fi
+
+
+plot=${plot}"set term svg solid lw 1\n\
 set output \"$output\"\n\
-set logscale $logScale\n\
 set grid\n\
 set title \"$title\"\n\
 set xlabel \"Function evaluations (/$scale)\"\n\
@@ -75,4 +81,4 @@ plot="$plot \n\
 set output\n\
 set term wxt\n"
 
-echo -e $plot | gnuplot
+echo -e $plot #| gnuplot
