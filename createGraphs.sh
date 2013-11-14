@@ -81,4 +81,4 @@ plot="$plot \n\
 set output\n\
 set term wxt\n"
 
-echo -e $plot #| gnuplot
+echo -e $plot | gnuplot
