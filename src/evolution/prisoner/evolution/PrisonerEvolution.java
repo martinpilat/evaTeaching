@@ -36,14 +36,6 @@ public class PrisonerEvolution {
             e.printStackTrace();
         }
 
-        prop = new Properties();
-        try {
-            InputStream propIn = new FileInputStream("properties/ga-binPacking.properties");
-            prop.load(propIn);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         DetailsLogger.disableLog();
 
         maxGen = Integer.parseInt(prop.getProperty("ea.maxGenerations", "20"));
