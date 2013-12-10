@@ -1,6 +1,6 @@
 package evolution.individuals;
 
-public class MultiRealIndividual extends RealIndividual implements Comparable<MultiRealIndividual> {
+public class MultiRealIndividual extends RealIndividual{
 
     double[] multiObjectiveValues;
     static double hypervolume;
@@ -52,17 +52,5 @@ public class MultiRealIndividual extends RealIndividual implements Comparable<Mu
 
     public void setFront(double front) {
         this.front = front;
-    }
-
-    @Override
-    public int compareTo(MultiRealIndividual o) {
-        if (this.getFront() < o.getFront())
-            return -1;
-        if (this.getFront() == o.getFront() && this.getSsc() < o.getSsc())
-            return -1;
-        if (this.getFront() == o.getFront() && this.getSsc() == o.getSsc()) {
-            return 0;
-        }
-        return 1;
     }
 }
