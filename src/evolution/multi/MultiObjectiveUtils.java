@@ -12,14 +12,20 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- * Created with IntelliJ IDEA.
- * User: marti_000
- * Date: 8.12.13
- * Time: 16:57
- * To change this template use File | Settings | File Templates.
+ * Utilities useful for multi-objective optimization.
+ *
+ * @author Martin Pilat
  */
 public class MultiObjectiveUtils {
 
+
+    /**
+     * Checks the dominance between individuals
+     *
+     * @param i1 First individual
+     * @param i2 Second individual
+     * @return *true* if the first individual dominates the second individual, *false* otherwise
+     */
     public static boolean dominates(Individual i1, Individual i2) {
         MultiRealIndividual mri1 = (MultiRealIndividual)i1;
         MultiRealIndividual mri2 = (MultiRealIndividual)i2;
@@ -38,6 +44,13 @@ public class MultiObjectiveUtils {
             }
         return strong;
     }
+
+    /**
+     * Extracts the first non-dominated front from the population.
+     *
+     * @param pop The population
+     * @return The first non-dominated front from *pop*, *null* if *pop* is empty.
+     */
 
     public static ArrayList<Individual> getNonDominatedFront(ArrayList<Individual> pop) {
 
@@ -63,6 +76,13 @@ public class MultiObjectiveUtils {
         return front;
     }
 
+    /**
+     * Assigns the front number to each individual in the population
+     *
+     * @param pop The population
+     */
+
+
     public static void assignFrontNumbers(Population pop) {
 
         ArrayList<Individual> inds = new ArrayList<Individual>();
@@ -85,6 +105,14 @@ public class MultiObjectiveUtils {
 
     }
 
+    /**
+     * Assigns the crowding distance to each individual in the front.
+     *
+     * Assumes all the individuals in the input list are mutually non-dominated.
+     * WARNING: Works only for bi-objective problems.
+     *
+     * @param front The front
+     */
     public static void assignCrowdingDistance(ArrayList<Individual> front) {
 
         ArrayList<MultiRealIndividual> mris = new ArrayList<MultiRealIndividual>();
@@ -105,6 +133,14 @@ public class MultiObjectiveUtils {
         }
 
     }
+
+    /**
+     * Assigns both the front number and the crowding distance to all the individuals in the population.
+     *
+     * WARNING: Works only for bi-objective problems.
+     *
+     * @param pop The population
+     */
 
     public static void assignFrontAndSsc(Population pop) {
 
@@ -128,6 +164,16 @@ public class MultiObjectiveUtils {
         }
 
     }
+
+    /**
+     * Calculates the hypervolume of the population given the reference point
+     *
+     * WARNING: Works only for bi-objective problems.
+     *
+     * @param pop
+     * @param reference
+     * @return
+     */
 
     public static double calculateHypervolume(Population pop, double[] reference) {
 
@@ -157,15 +203,35 @@ public class MultiObjectiveUtils {
         return volume;
     }
 
+
+    /**
+     * Prints the objective values of the individual.
+     *
+     * WARNING: Works only for bi-objective problems.
+     *
+     * @param mri The individual.
+     * @param bw OutputStreamWriter where to print the individual.
+     * @throws IOException
+     */
     public static void printIndividual(MultiRealIndividual mri, OutputStreamWriter bw) throws IOException {
 
         bw.write(mri.getMultiObjectiveValues()[0] + " " + mri.getMultiObjectiveValues()[1] + "\n");
 
     }
 
+    /**
+     * Compares two individuals based on one of the objective values. Used for sorting during some of the calculations.
+     */
+
     static class ObjectiveValueComparator implements Comparator<MultiRealIndividual> {
 
         int index = 0;
+
+        /**
+         * Constructor.
+         *
+         * @param index The index of the objective value used for comparison.
+         */
 
         public ObjectiveValueComparator(int index) {
             this.index = index;

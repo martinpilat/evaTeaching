@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+/**
+ * Implementation of the NSGA-II selection.
+ */
+
 public class NSGA2Selector implements Selector {
 
     @Override
@@ -27,6 +31,10 @@ public class NSGA2Selector implements Selector {
             to.add(inds.get(i));
         }
     }
+
+    /**
+     * Compares the individuals based on the front number (lower is better) and the crowding distance (larger is better).
+     */
 
     class NSGA2Comparator implements Comparator<Individual> {
 

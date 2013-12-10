@@ -25,14 +25,8 @@ public class Multi {
     static double mutProb;
     static double mutSigma;
     static String logFilePrefix;
-    static String resultsFile;
     static int repeats;
-    static Vector<Double> weights;
-    static String progFilePrefix;
-    static String progFile;
     static String bestPrefix;
-    static double eliteSize;
-    static String outputDir;
     static Properties prop;
     static String outputDirectory;
     static String objectiveFilePrefix;
@@ -63,10 +57,10 @@ public class Multi {
         DetailsLogger.disableLog();
 
         ArrayList<MultiObjectiveFunction> mofs = new ArrayList<MultiObjectiveFunction>();
-        //mofs.add(new ZDT1());
-        //mofs.add(new ZDT2());
-        //mofs.add(new ZDT3());
-        //mofs.add(new ZDT4());
+        mofs.add(new ZDT1());
+        mofs.add(new ZDT2());
+        mofs.add(new ZDT3());
+        mofs.add(new ZDT4());
         mofs.add(new ZDT6());
 
 
@@ -120,12 +114,12 @@ public class Multi {
 
             for (int i = 0; i < maxGen; i++) {
                 ea.evolve(pop);
+                MultiRealIndividual mri = (MultiRealIndividual)pop.getSortedIndividuals().get(0);
+                double hypervolume = mof.getOptimalHypervolume() - MultiObjectiveUtils.calculateHypervolume(pop, mof.getReferencePoint());
+                mri.setObjectiveValue(hypervolume);
                 if (i % 100 == 0) {
-                    MultiRealIndividual mri = (MultiRealIndividual)pop.getSortedIndividuals().get(0);
-                    double hypervolume = mof.getOptimalHypervolume() - MultiObjectiveUtils.calculateHypervolume(pop, mof.getReferencePoint());
                     System.out.println("Generation " + i + ": "  + hypervolume);
-                    mri.setObjectiveValue(hypervolume);
-                }
+                    }
                 StatsLogger.logFitness(pop, fitnessOut);
                 StatsLogger.logObjective(pop, objectiveOut);
             }
@@ -147,15 +141,5 @@ public class Multi {
         }
 
 
-    }
-
-    static String printArray(double[] a) {
-        StringBuilder sb = new StringBuilder();
-
-        for (double d: a) {
-            sb.append(String.format(Locale.US, "%.5f", d) + " ");
-        }
-
-        return sb.toString();
     }
 }

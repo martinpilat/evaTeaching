@@ -8,11 +8,7 @@ import evolution.individuals.MultiRealIndividual;
 import evolution.multi.functions.MultiObjectiveFunction;
 
 /**
- * Created with IntelliJ IDEA.
- * User: marti_000
- * Date: 8.12.13
- * Time: 16:28
- * To change this template use File | Settings | File Templates.
+ * Implementation of the fitness function in the multi-objective case.
  */
 public class MultiObjectiveFitnessFunction implements FitnessFunction {
 
