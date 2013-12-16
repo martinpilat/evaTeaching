@@ -1,9 +1,6 @@
-package evolution.cv10;
+package evolution.tsp;
 
-import evolution.EvolutionaryAlgorithm;
-import evolution.Population;
-import evolution.RandomNumberGenerator;
-import evolution.StatsLogger;
+import evolution.*;
 import evolution.individuals.IntegerIndividual;
 import evolution.operators.SwappingMutationOperator;
 import evolution.selectors.TournamentSelector;
@@ -19,36 +16,59 @@ public class TravellingSalesman {
     static int maxGen;
     static int popSize;
     static String logFilePrefix;
-    static String resultsFile;
     static int repeats;
-    static int K;
     static Vector<Coordinates> coords;
-    static String progFilePrefix;
-    static String progFile;
     static String bestPrefix;
     static double eliteSize;
+    static double xoverProb;
+    static double mutProb;
+    static double mutProbPerBit;
+    static String enableDetailsLog;
+    static String outputDirectory;
+    static String objectiveFilePrefix;
+    static String objectiveStatsFile;
+    static String fitnessFilePrefix;
+    static String fitnessStatsFile;
+    static String detailsLogPrefix;
 
     public static void main(String[] args) {
 
         Properties prop = new Properties();
         try {
-            InputStream propIn = new FileInputStream("ga-cv11.properties");
+            InputStream propIn = new FileInputStream("properties/ga-tsp.properties");
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        maxGen = Integer.parseInt(prop.getProperty("max_generations", "20"));
-        popSize = Integer.parseInt(prop.getProperty("population_size", "30"));
-        progFilePrefix = prop.getProperty("prog_file_prefix", "objective.log");
-        progFile = prop.getProperty("prog_file_results", "objective_stats.log");
-        bestPrefix = prop.getProperty("best_ind_prefix", "best");
-        logFilePrefix = prop.getProperty("log_filename_prefix", "fitness.log");
-        resultsFile = prop.getProperty("results_filename", "fitness_stats.log");
-        repeats = Integer.parseInt(prop.getProperty("repeats", "10"));
-        eliteSize = Double.parseDouble(prop.getProperty("elite_size", "0.1"));
+        maxGen = Integer.parseInt(prop.getProperty("ea.maxGenerations", "20"));
+        popSize = Integer.parseInt(prop.getProperty("ea.popSize", "30"));
+        xoverProb = Double.parseDouble(prop.getProperty("ea.xoverProb", "0.8"));
+        mutProb = Double.parseDouble(prop.getProperty("ea.mutProb", "0.05"));
+        mutProbPerBit = Double.parseDouble(prop.getProperty("ea.mutProbPerBit", "0.04"));
+        eliteSize = Double.parseDouble(prop.getProperty("ea.eliteSize", "0.1"));
 
-        String inputFile = prop.getProperty("input_file", "tsp_evropa.in");
+        String inputFile = prop.getProperty("prob.inputFile", "resources/tsp_evropa.in");
+
+        repeats = Integer.parseInt(prop.getProperty("xset.repeats", "10"));
+        enableDetailsLog = prop.getProperty("xlog.detailsLog", "enabled");
+
+        if (!enableDetailsLog.equals("enabled")) {
+            DetailsLogger.disableLog();
+        }
+
+        outputDirectory = prop.getProperty("xlog.outputDirectory", "tsp");
+        logFilePrefix = prop.getProperty("xlog.filePrefix", "tsp");
+        String path = outputDirectory + System.getProperty("file.separator") + logFilePrefix;
+        objectiveFilePrefix = path + ".objective";
+        objectiveStatsFile = path + ".objective_stats";
+        bestPrefix = path + ".best";
+        fitnessFilePrefix = path + ".fitness";
+        fitnessStatsFile = path + ".fitness_stats";
+        detailsLogPrefix = path + ".details";
+
+        File output = new File(outputDirectory);
+        output.mkdirs();
 
         coords = new Vector<Coordinates>();
         try {
@@ -69,53 +89,9 @@ public class TravellingSalesman {
             run(i);
         }
 
-        processResults(logFilePrefix, resultsFile);
-        processResults(progFilePrefix, progFile);
+        StatsLogger.processResults(fitnessFilePrefix, fitnessStatsFile, repeats, maxGen, popSize);
+        StatsLogger.processResults(objectiveFilePrefix, objectiveStatsFile, repeats, maxGen, popSize);
 
-    }
-
-    static void processResults(String logPrefix, String resultsName) {
-        Vector<Vector<Double>> bestFitnesses = new Vector<Vector<Double>>();
-        try {
-            for (int i = 0; i < repeats; i++) {
-                Vector<Double> column = new Vector<Double>();
-
-                BufferedReader in = new BufferedReader(new FileReader(
-                        logPrefix + "." + i));
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    double best = Double.parseDouble(line.split(" ")[0]);
-                    column.add(best);
-                }
-
-                bestFitnesses.add(column);
-            }
-
-            FileWriter out = new FileWriter(resultsName);
-
-            for (int j = 0; j < maxGen; j++) {
-                double min = Double.MAX_VALUE;
-                double max = -Double.MAX_VALUE;
-                double sum = 0;
-                for (int i = 0; i < repeats; i++) {
-                    double current = bestFitnesses.get(i).get(j);
-
-                    min = Math.min(current, min);
-                    max = Math.max(current, max);
-                    sum += current;
-                }
-
-                double avg = sum / repeats;
-
-                out.write(min + " " + avg + " " + max
-                        + System.getProperty("line.separator"));
-
-            }
-            out.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     static void run(int number) {
@@ -138,6 +114,7 @@ public class TravellingSalesman {
 
             pop.createRandomInitialPopulation();
 
+            //ensure all the individuals represent permutation
             for (int i = 0; i < pop.getPopulationSize(); i++) {
 
                 ArrayList rand = new ArrayList();
@@ -147,7 +124,6 @@ public class TravellingSalesman {
                 }
 
                 Collections.shuffle(rand);
-
                 IntegerIndividual tmp = (IntegerIndividual) pop.get(i);
                 for (int j = 0; j < tmp.length(); j++) {
                     tmp.set(j, rand.get(j));
@@ -155,17 +131,15 @@ public class TravellingSalesman {
 
             }
 
-            OutputStreamWriter out = new OutputStreamWriter(
-                    new FileOutputStream(logFilePrefix + "." + number));
-
-            OutputStreamWriter progOut = new OutputStreamWriter(
-                    new FileOutputStream(progFilePrefix + "." + number));
+            OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fitnessFilePrefix + "." + number));
+            OutputStreamWriter progOut = new OutputStreamWriter(new FileOutputStream(objectiveFilePrefix + "." + number));
 
             for (int i = 0; i < maxGen; i++) {
                 ea.evolve(pop);
 
                 IntegerIndividual ch = (IntegerIndividual) pop.getSortedIndividuals().get(0);
 
+                //check whether each city is used only once
                 boolean[] used = new boolean[ch.length()];
                 for (int g : ch.toIntArray()) {
                     if (used[g]) {
@@ -177,18 +151,14 @@ public class TravellingSalesman {
                 Double diff = (Double) pop.getSortedIndividuals().get(0).getObjectiveValue();
                 System.out.println("Generation " + i + ": " + diff);
 
-
                 StatsLogger.logFitness(pop, out);
                 StatsLogger.logObjective(pop, progOut);
 
             }
 
-            OutputStreamWriter bestOut = new OutputStreamWriter(
-                    new FileOutputStream(bestPrefix + "." + number + ".kml"));
+            OutputStreamWriter bestOut = new OutputStreamWriter(new FileOutputStream(bestPrefix + "." + number + ".kml"));
 
-
-            FileReader in = new FileReader("kmlstart");
-            BufferedReader rin = new BufferedReader(in);
+            BufferedReader rin = new BufferedReader(new FileReader("resources/kmlstart"));
 
             String line = "";
 
@@ -196,7 +166,6 @@ public class TravellingSalesman {
                 bestOut.write(line + System.getProperty("line.separator"));
             }
 
-            in.close();
             rin.close();
 
             IntegerIndividual bestInd = (IntegerIndividual) pop.getSortedIndividuals().get(0);
@@ -207,8 +176,7 @@ public class TravellingSalesman {
 
             bestOut.write(" " + coords.get((Integer) bestInd.get(0)).toString() + System.getProperty("line.separator"));
 
-            in = new FileReader("kmlend");
-            rin = new BufferedReader(in);
+            rin = new BufferedReader(new FileReader("resources/kmlend"));
 
             line = "";
 
@@ -216,7 +184,6 @@ public class TravellingSalesman {
                 bestOut.write(line);
             }
 
-            in.close();
             rin.close();
             out.close();
             progOut.close();

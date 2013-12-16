@@ -1,4 +1,4 @@
-package evolution.cv10;
+package evolution.tsp;
 
 public class Coordinates {
 
