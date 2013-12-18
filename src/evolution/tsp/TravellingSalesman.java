@@ -110,7 +110,7 @@ public class TravellingSalesman {
             ea.setFitnessFunction(new TSPFitness(coords));
             ea.addOperator(new SwappingMutationOperator(mutProb, mutProbPerBit));
             ea.addEnvironmentalSelector(new TournamentSelector());
-            ea.setElite(0.05);
+            ea.setElite(eliteSize);
 
             pop.createRandomInitialPopulation();
 
