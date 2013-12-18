@@ -32,7 +32,7 @@ public class Real {
     static String progFile;
     static String bestPrefix;
     static double eliteSize;
-    static String outputDir;
+    static double mutProbPerBit;
     static Properties prop;
     static String outputDirectory;
     static String objectiveFilePrefix;
@@ -55,6 +55,7 @@ public class Real {
         popSize = Integer.parseInt(prop.getProperty("ea.popSize", "30"));
         xoverProb = Double.parseDouble(prop.getProperty("ea.xoverProb", "0.8"));
         mutProb = Double.parseDouble(prop.getProperty("ea.mutProb", "0.05"));
+        mutProbPerBit = Double.parseDouble(prop.getProperty("ea.mutProbPerBit", "0.1"));
         mutSigma = Double.parseDouble(prop.getProperty("ea.mutSigma", "0.04"));
         eliteSize = Double.parseDouble(prop.getProperty("ea.eliteSize", "0.1"));
 
@@ -132,7 +133,7 @@ public class Real {
             EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
             ea.addMatingSelector(new MySelector());
             ea.addOperator(new AveragingCrossoverOperator(xoverProb));
-            ea.addOperator(new GaussianMutationOperator(mutProb, mutSigma));
+            ea.addOperator(new GaussianMutationOperator(mutProb, mutProbPerBit, mutSigma));
             ea.setFitnessFunction(new RealFitnessFunction(rf));
             ea.addEnvironmentalSelector(new TournamentSelector());
             ea.setElite(eliteSize);
