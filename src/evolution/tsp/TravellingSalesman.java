@@ -123,7 +123,7 @@ public class TravellingSalesman {
                     rand.add(j);
                 }
 
-                Collections.shuffle(rand);
+                Collections.shuffle(rand, RandomNumberGenerator.getInstance().getRandom());
                 IntegerIndividual tmp = (IntegerIndividual) pop.get(i);
                 for (int j = 0; j < tmp.length(); j++) {
                     tmp.set(j, rand.get(j));
