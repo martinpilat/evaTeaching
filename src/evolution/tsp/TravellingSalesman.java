@@ -108,7 +108,7 @@ public class TravellingSalesman {
 
             EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
             ea.setFitnessFunction(new TSPFitness(coords));
-            ea.addOperator(new SwappingMutationOperator(0.8, 0.05));
+            ea.addOperator(new SwappingMutationOperator(mutProb, mutProbPerBit));
             ea.addEnvironmentalSelector(new TournamentSelector());
             ea.setElite(0.05);
 
