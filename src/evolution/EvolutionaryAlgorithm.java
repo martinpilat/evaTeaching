@@ -202,29 +202,35 @@ public class EvolutionaryAlgorithm {
 
         DetailsLogger.logNewEnvironmentalSelection();
 
-        ArrayList<Individual> sortedOld = parents.getSortedIndividuals();
-        for (int i = 0; i < eliteSize * parents.getPopulationSize(); i++) {
-            selected.add(sortedOld.get(i));
-            sortedOld.get(i).setLogNotes(sortedOld.get(i).getLogNotes() + " none:elitism");
-        }
-
         Population combined = replacement.replace(parents, offspring);
 
-        fitness.evaluate(combined);
+        if (environmentalSelectors.isEmpty()) {
+            selected = (Population)combined.clone();
+            fitness.evaluate(combined);
+        } else {
+            ArrayList<Individual> sortedOld = parents.getSortedIndividuals();
+            for (int i = 0; i < eliteSize * parents.getPopulationSize(); i++) {
+                selected.add(sortedOld.get(i));
+                sortedOld.get(i).setLogNotes(sortedOld.get(i).getLogNotes() + " none:elitism");
+            }
 
-        int envSel = environmentalSelectors.size();
-        int toSelect = (parents.getPopulationSize() - selected.getPopulationSize()) / envSel;
-        for (int i = 0; i < environmentalSelectors.size(); i++) {
-            Population sel = new Population();
-            environmentalSelectors.get(i).select(toSelect, combined, sel);
-            selected.addAll((Population) sel.clone());
-        }
 
-        int missing = parents.getPopulationSize() - selected.getPopulationSize();
-        if (missing > 0) {
-            Population sel = new Population();
-            environmentalSelectors.get(environmentalSelectors.size() - 1).select(toSelect, combined, sel);
-            selected.addAll((Population) sel.clone());
+            fitness.evaluate(combined);
+
+            int envSel = environmentalSelectors.size();
+            int toSelect = (parents.getPopulationSize() - selected.getPopulationSize()) / envSel;
+            for (int i = 0; i < environmentalSelectors.size(); i++) {
+                Population sel = new Population();
+                environmentalSelectors.get(i).select(toSelect, combined, sel);
+                selected.addAll((Population) sel.clone());
+            }
+
+            int missing = parents.getPopulationSize() - selected.getPopulationSize();
+            if (missing > 0) {
+                Population sel = new Population();
+                environmentalSelectors.get(environmentalSelectors.size() - 1).select(toSelect, combined, sel);
+                selected.addAll((Population) sel.clone());
+            }
         }
 
         DetailsLogger.logSelectedPart(combined);

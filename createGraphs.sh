@@ -3,7 +3,7 @@
 interactive=
 output="graph.svg"
 title="Objective value log"
-logScale="y"
+logScale=""
 path=$(pwd)
 scale=1
 barsEvery=20

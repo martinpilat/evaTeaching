@@ -43,6 +43,8 @@ public class Main {
             e.printStackTrace();
         }
 
+        //Read to properties from the file.
+
         maxGen = Integer.parseInt(prop.getProperty("ea.maxGenerations", "20"));
         popSize = Integer.parseInt(prop.getProperty("ea.popSize", "30"));
         xoverProb = Double.parseDouble(prop.getProperty("ea.xoverProb", "0.8"));
@@ -68,6 +70,8 @@ public class Main {
             outDir.mkdirs();
         }
 
+        //Run the algorithm
+
         for (int i = 0; i < repeats; i++) {
             run(i);
         }
@@ -77,36 +81,54 @@ public class Main {
 
     }
 
+    /**
+     * This is the main method, which executes one run of the evolutionary algorithm.
+     *
+     * @param number The number of this run, also used as seed for the random number generator.
+     */
+
+
     public static void run(int number) {
+
+        //Initialize logging of the run
 
         DetailsLogger.startNewLog(detailsLogPrefix + "." + number + ".xml");
         DetailsLogger.logParams(prop);
 
+        //Set the rng seed
+
         RandomNumberGenerator.getInstance().reseed(number);
 
+        //Create new population
         Population pop = new Population();
         pop.setPopulationSize(popSize);
         pop.setSampleIndividual(new BooleanIndividual(dimension));
         pop.createRandomInitialPopulation();
 
+
+        //Set the options for the evolutionary algorithm
         EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
-
         ea.setFitnessFunction(new ExampleFitnessFunction());
-
         ea.addMatingSelector(new RouletteWheelSelector());
         ea.addOperator(new OnePtXOver(xoverProb));
         ea.addOperator(new BitFlipMutation(mutProb, mutProbPerBit));
-        ea.addEnvironmentalSelector(new RouletteWheelSelector());
+
+
+        //Tun the algorithm
 
         try {
             OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fitnessFilePrefix + "." + number));
             OutputStreamWriter progOut = new OutputStreamWriter(new FileOutputStream(objectiveFilePrefix + "." + number));
 
             for (int i = 0; i < maxGen; i++) {
+
+                //Make one generation
                 ea.evolve(pop);
                 ArrayList<Individual> sorted = pop.getSortedIndividuals();
-                System.err.println("fitness: " + sorted.get(0).getFitnessValue() + " " + sorted.get(0));
+                //Log the best individual to console.
+                System.out.println("fitness: " + sorted.get(0).getFitnessValue() + " " + sorted.get(0));
 
+                //Add population statistics to the logs
                 StatsLogger.logFitness(pop, out);
                 StatsLogger.logObjective(pop, progOut);
             }

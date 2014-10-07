@@ -9,6 +9,13 @@ import evolution.individuals.Individual;
  */
 public class ExampleFitnessFunction implements FitnessFunction {
 
+    /**
+     * THis is an example fitness function
+
+     * @param ind The individual which shall be evaluated
+     * @return The number of 1s in the individual
+     */
+
     public double evaluate(Individual ind) {
 
         BooleanIndividual bi = (BooleanIndividual) ind;
@@ -21,7 +28,7 @@ public class ExampleFitnessFunction implements FitnessFunction {
                 fitness += 1.0;
         }
 
-        ind.setObjectiveValue(fitness); //nastavuje hodnotu optimalizovaneho kriteria, nemusi se (obecne) rovnat primo fitness
+        ind.setObjectiveValue(fitness); //this sets the objective value, can be different from the fitness function
 
         return fitness;
     }

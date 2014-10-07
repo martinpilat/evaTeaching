@@ -3,7 +3,7 @@
     [string[]]$legendNames,
     [string]$output = "graph.svg",
     [string]$title = "Objective value log",
-    [string]$logScale = "y",
+    [string]$logScale = "",
     [string]$path = $(pwd),
     [int]$scale = 1,
     [int]$barsEvery = 20,
