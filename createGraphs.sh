@@ -1,17 +1,18 @@
 #!/bin/bash
 
-interactive=
+
+#bash createGraphs2.sh -logfileNames sga/sgaLog -legendNames sga
+
 output="graph.svg"
 title="Objective value log"
 logScale=""
 path=$(pwd)
 scale=1
 barsEvery=20
-
 while [ "$1" != "" ]; do
-    case "$1" in
+	case "$1" in
 	-logfileNames)
-	    shift
+        shift
 	    logfileNames=$1
 	    ;;
 	-legendNames)
@@ -79,6 +80,6 @@ plot=`echo $plot | sed 's/.$//'`
 
 plot="$plot \n\
 set output\n\
-set term wxt\n"
+set term pop\n"
 
 echo -e $plot | gnuplot

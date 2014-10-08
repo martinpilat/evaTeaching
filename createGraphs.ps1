@@ -28,11 +28,11 @@ $plot = $plot + "set term svg solid lw 2
 		set ylabel 'Objective value'
 		plot [:$limit]"    
 
+$color = 0
 foreach ($logFile in $logFileNames) {
 
-	$color = $logFileNames.IndexOf($logFile);
 	$name = $legendNames.Get($color)
-    $color += 1
+    $color += 1 #powershell has 0 based arrays, gnuplot colors start from 1
 
 	$plot = $plot + "`'$path\$logFile.objective_stats`' using (`$1/$scale):4 w l title `'$name`' ls 1 lc $color, `'$path\$logFile.objective_stats`' every $barsEvery using (`$1/$scale):4:3:5 with yerrorbars notitle ls 1 lc $color,"
 }

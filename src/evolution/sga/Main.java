@@ -114,7 +114,7 @@ public class Main {
         ea.addOperator(new BitFlipMutation(mutProb, mutProbPerBit));
 
 
-        //Tun the algorithm
+        //Run the algorithm
 
         try {
             OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(fitnessFilePrefix + "." + number));
