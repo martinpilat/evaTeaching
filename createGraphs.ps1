@@ -1,5 +1,5 @@
 ﻿param (
-    [string[]]$logfileNames,
+    [string[]]$logFileNames,
     [string[]]$legendNames,
     [string]$output = "graph.svg",
     [string]$title = "Objective value log",
