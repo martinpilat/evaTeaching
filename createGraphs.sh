@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-#bash createGraphs2.sh -logfileNames sga/sgaLog -legendNames sga
+#bash createGraphs2.sh -logFileNames sga/sgaLog -legendNames sga
 
 output="graph.svg"
 title="Objective value log"
@@ -11,9 +11,9 @@ scale=1
 barsEvery=20
 while [ "$1" != "" ]; do
 	case "$1" in
-	-logfileNames)
+	-logFileNames)
         shift
-	    logfileNames=$1
+	    logFileNames=$1
 	    ;;
 	-legendNames)
 	    shift
@@ -66,7 +66,7 @@ set xlabel \"Function evaluations (/$scale)\"\n\
 set ylabel \"Objective value\"\n\
 plot [:$limit]"
 
-logFileNames=`echo $logfileNames | tr ',' ' '`
+logFileNames=`echo $logFileNames | tr ',' ' '`
 
 color=0
 for logName in $logFileNames ; do
