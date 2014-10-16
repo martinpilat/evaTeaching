@@ -1,18 +1,29 @@
-package evolution.operators;
+package org.pikater.core.utilities.evolution.operators;
 
-import evolution.Population;
-import evolution.RandomNumberGenerator;
-import evolution.individuals.IntegerIndividual;
+import org.pikater.core.ontology.subtrees.newOption.values.IntegerValue;
+import org.pikater.core.utilities.evolution.Population;
+import org.pikater.core.utilities.evolution.RandomNumberGenerator;
+import org.pikater.core.utilities.evolution.individuals.IntegerIndividual;
 
 /**
+ * A mutation for integer encoded individuals. Goes through the indivudal and generates new value from the 
+ * valid interval for each of the positions with a given probability.
+ *
  * @author Martin Pilat
  */
-public class IntegerMutation implements Operator {
+public class IntegerMutation implements Operator{
 
     double mutationProbability;
     double geneChangeProbability;
     RandomNumberGenerator rng = RandomNumberGenerator.getInstance();
 
+    /**
+     * Constructor, sets the probabilities
+     * 
+     * @param mutationProbability the probability of mutating an individual
+     * @param geneChangeProbability the probability of changing a given gene in the mutated individual
+     */
+    
     public IntegerMutation(double mutationProbability, double geneChangeProbability) {
         this.mutationProbability = mutationProbability;
         this.geneChangeProbability = geneChangeProbability;
@@ -24,18 +35,18 @@ public class IntegerMutation implements Operator {
 
         for (int i = 0; i < size; i++) {
 
-            IntegerIndividual p1 = (IntegerIndividual) parents.get(rng.nextInt(size));
-            IntegerIndividual o1 = (IntegerIndividual) p1.clone();
+             IntegerIndividual p1 = (IntegerIndividual) parents.get(rng.nextInt(size));
+             IntegerIndividual o1 = (IntegerIndividual) p1.clone();
 
-            if (rng.nextDouble() < mutationProbability) {
-                for (int j = 0; j < o1.length(); j++) {
-                    if (rng.nextDouble() < geneChangeProbability) {
-                        o1.set(j, RandomNumberGenerator.getInstance().nextInt(o1.getMax() - o1.getMin()) + o1.getMin());
-                    }
-                }
-            }
+             if (rng.nextDouble() < mutationProbability) {
+                 for (int j = 0; j < o1.length(); j++) {
+                     if (rng.nextDouble() < geneChangeProbability) {
+                         o1.set(j, new IntegerValue( RandomNumberGenerator.getInstance().nextInt(o1.getMax() - o1.getMin()) + o1.getMin()) );
+                     }
+                 }
+             }
 
-            offspring.add(o1);
+             offspring.add(o1);
         }
     }
 

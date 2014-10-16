@@ -1,15 +1,16 @@
-package evolution.individuals;
+package org.pikater.core.utilities.evolution.individuals;
 
-import evolution.RandomNumberGenerator;
+import org.pikater.core.ontology.subtrees.newOption.values.BooleanValue;
+import org.pikater.core.ontology.subtrees.newOption.values.interfaces.IValueData;
+import org.pikater.core.utilities.evolution.RandomNumberGenerator;
 
 import java.util.Arrays;
 
-/**
- * Individual represented using an array of booleans.
+/** Individual represented using an array of booleans.
  *
  * @author Martin Pilat
  */
-public class BooleanIndividual extends ArrayIndividual {
+public class BooleanIndividual extends ArrayIndividual{
 
     int length = 0;
     boolean[] genes = null;
@@ -25,7 +26,6 @@ public class BooleanIndividual extends ArrayIndividual {
 
     /**
      * Returns the internal array of booleans.
-     *
      * @return The internall array.
      */
     public boolean[] toBooleanArray() {
@@ -38,8 +38,8 @@ public class BooleanIndividual extends ArrayIndividual {
     }
 
     @Override
-    public void set(int n, Object o) {
-        genes[n] = (Boolean) o;
+    public void set(int n, IValueData o) {
+        genes[n] = ((BooleanValue) o).getValue();
     }
 
     /**
@@ -54,15 +54,15 @@ public class BooleanIndividual extends ArrayIndividual {
             else
                 genes[i] = false;
         }
-
+        
     }
 
     @Override
-    public Object clone() {
-
+    public BooleanIndividual clone() {
+        
         BooleanIndividual newBI = (BooleanIndividual) super.clone();
         newBI.genes = new boolean[genes.length];
-
+        
         System.arraycopy(genes, 0, newBI.genes, 0, genes.length);
 
         newBI.length = length;

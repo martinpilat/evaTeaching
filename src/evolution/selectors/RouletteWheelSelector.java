@@ -1,13 +1,16 @@
-package evolution.selectors;
+package org.pikater.core.utilities.evolution.selectors;
 
-import evolution.Population;
-import evolution.RandomNumberGenerator;
-import evolution.individuals.Individual;
+import org.pikater.core.utilities.evolution.Population;
+import org.pikater.core.utilities.evolution.RandomNumberGenerator;
+import org.pikater.core.utilities.evolution.individuals.Individual;
 
 /**
+ * Implements the roulette wheel selection. The probability of chosing an individual is in direct 
+ * proportion to its fitness. 
+ * 
  * @author Martin Pilat
  */
-public class RouletteWheelSelector implements Selector {
+public class RouletteWheelSelector implements Selector{
 
     RandomNumberGenerator rng = RandomNumberGenerator.getInstance();
 
@@ -21,11 +24,11 @@ public class RouletteWheelSelector implements Selector {
 
         double[] fitnesses = new double[from.getPopulationSize()];
 
-        for (int i = 0; i < fitnesses.length; i++) {
-            fitnesses[i] = from.get(i).getFitnessValue() / fitnessSum;
+        for(int i = 0; i < fitnesses.length; i++) {
+            fitnesses[i] = from.get(i).getFitnessValue()/fitnessSum;
         }
 
-        for (int i = 0; i < howMany; i++) {
+        for(int i = 0; i < howMany; i++) {
 
             double ball = rng.nextDouble();
             double sum = 0;
@@ -34,7 +37,7 @@ public class RouletteWheelSelector implements Selector {
 
                 sum += fitnesses[j];
                 if (sum > ball) {
-                    to.add((Individual) from.get(j).clone());
+                    to.add((Individual)from.get(j).clone());
                     break;
                 }
             }
