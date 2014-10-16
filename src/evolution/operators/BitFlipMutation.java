@@ -5,6 +5,10 @@ import evolution.RandomNumberGenerator;
 import evolution.individuals.BooleanIndividual;
 
 /**
+ * Simple mutation for the simple genetic algorithm. Goes through the individual and flips each bit with
+ * a given probability.
+ *
+ *
  * @author Martin Pilat
  */
 public class BitFlipMutation implements Operator {
@@ -13,6 +17,13 @@ public class BitFlipMutation implements Operator {
     double bitFlipProbability;
     RandomNumberGenerator rng = RandomNumberGenerator.getInstance();
 
+    /**
+     * Constructor, sets the probabilities.
+     * 
+     * @param mutationProbability probability of mutating each individual
+     * @param bitFlipProbability probability of flipping a bit in the mutated individual
+     */
+    
     public BitFlipMutation(double mutationProbability, double bitFlipProbability) {
         this.mutationProbability = mutationProbability;
         this.bitFlipProbability = bitFlipProbability;

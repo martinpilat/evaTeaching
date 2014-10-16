@@ -22,7 +22,6 @@ public class EvolutionaryAlgorithm {
     double eliteSize = 0.0;
     FitnessEvaluator fitness;
     Replacement replacement;
-    int generationNo = 0;
 
     /**
      * Initializes an empty evolutionary algorithm. Replacement is set to the
@@ -214,6 +213,13 @@ public class EvolutionaryAlgorithm {
                 sortedOld.get(i).setLogNotes(sortedOld.get(i).getLogNotes() + " none:elitism");
             }
 
+        int envSel = environmentalSelectors.size();
+        int toSelect = (parents.getPopulationSize() - selected.getPopulationSize()) / envSel;
+        for (int i = 0; i < environmentalSelectors.size(); i++) {
+            Population sel = new Population();
+            environmentalSelectors.get(i).select(toSelect, combined, sel);
+            selected.addAll((Population) sel.clone());
+        }
 
             fitness.evaluate(combined);
 

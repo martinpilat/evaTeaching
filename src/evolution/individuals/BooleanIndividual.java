@@ -2,6 +2,8 @@ package evolution.individuals;
 
 import evolution.RandomNumberGenerator;
 
+import java.util.Arrays;
+
 /**
  * Individual represented using an array of booleans.
  *
@@ -18,15 +20,7 @@ public class BooleanIndividual extends ArrayIndividual {
     }
 
     public String toString() {
-        StringBuilder s = new StringBuilder("[");
-        for(boolean b : genes) {
-            if (b)
-                s.append("1");
-            else
-                s.append("0");
-        }
-        s.append("]");
-        return s.toString();
+        return "fitness: " + getFitnessValue() + " " + Arrays.toString(genes);
     }
 
     /**

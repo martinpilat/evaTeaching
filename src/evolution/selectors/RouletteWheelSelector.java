@@ -5,6 +5,9 @@ import evolution.RandomNumberGenerator;
 import evolution.individuals.Individual;
 
 /**
+ * Implements the roulette wheel selection. The probability of chosing an individual is in direct 
+ * proportion to its fitness. 
+ * 
  * @author Martin Pilat
  */
 public class RouletteWheelSelector implements Selector {
@@ -35,7 +38,6 @@ public class RouletteWheelSelector implements Selector {
                 sum += fitnesses[j];
                 if (sum > ball) {
                     to.add((Individual) from.get(j).clone());
-                    from.get(j).setLogNotes(from.get(j).getLogNotes() + " " + this.getClass().getCanonicalName());
                     break;
                 }
             }
