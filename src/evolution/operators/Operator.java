@@ -1,6 +1,6 @@
-package org.pikater.core.utilities.evolution.operators;
+package evolution.operators;
 
-import org.pikater.core.utilities.evolution.Population;
+import evolution.Population;
 
 /**
  * Interface for all genetic operators. 
@@ -17,7 +17,7 @@ public interface Operator {
 	 * @param parents the population of parents
 	 * @param offspring the population of offspring
 	 */
-	
+
     public void operate(Population parents, Population offspring);
 
 }

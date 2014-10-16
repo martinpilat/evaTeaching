@@ -5,18 +5,18 @@ import evolution.individuals.Individual;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
-/** A container which contains the individuals of a population.
+/**
+ * A container which contains the individuals of a population.
  *
  * @author Martin Pilat
  */
-public class Population implements ICloneable
-{
+public class Population implements Cloneable {
+
     int size = 0;
     Individual sampleIndividual;
-    List<Individual> individuals;
-    
+    ArrayList<Individual> individuals;
+
     /**
      * Creates a new empty population.
      */
@@ -32,19 +32,20 @@ public class Population implements ICloneable
      * their clone methods.
      */
     @Override
-    public Population clone()
-    {
-        try
-        {
-            Population result = (Population) super.clone();
-            result.individuals = CollectionUtils.deepCopy(individuals);
-            return result;
+    public Object clone() {
+        try {
+            Population newP = (Population) super.clone();
+            newP.individuals = new ArrayList<Individual>(individuals.size());
+            for (Individual i : individuals) {
+                newP.individuals.add((Individual) i.clone());
+            }
+            return newP;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        catch (Exception e)
-        {
-        	ConsoleLogger.logThrowable("Unexpected error occured:", e);
-        	throw new RuntimeException("failed to clone");
-        }
+
+
+        return null;
     }
 
     /**
@@ -66,6 +67,7 @@ public class Population implements ICloneable
 
     /**
      * Sets the population size, used only during the random initialization.
+     *
      * @param size The population size.
      */
 
@@ -75,6 +77,7 @@ public class Population implements ICloneable
 
     /**
      * Returns the actual size of the population.
+     *
      * @return The number of individuals in the population.
      */
 
@@ -84,6 +87,7 @@ public class Population implements ICloneable
 
     /**
      * Gets the ith individual in the population.
+     *
      * @param i The index of the individual which shall be returned.
      * @return The indivudal at index i.
      */
@@ -94,6 +98,7 @@ public class Population implements ICloneable
 
     /**
      * Adds an individual to the population.
+     *
      * @param ind The individual which shall be addded.
      */
 
@@ -104,6 +109,7 @@ public class Population implements ICloneable
     /**
      * Adds all the individuals fromt he population p to the population. Does not
      * clone them.
+     *
      * @param p The population from which the individuals shall be added.
      */
 
@@ -123,7 +129,7 @@ public class Population implements ICloneable
 
         for (int i = 0; i < size; i++) {
 
-            Individual n = (Individual)sampleIndividual.clone();
+            Individual n = (Individual) sampleIndividual.clone();
             n.randomInitialization();
             individuals.add(n);
 
@@ -140,12 +146,12 @@ public class Population implements ICloneable
     /**
      * Returns all the individuals in the population as a list sorted in descending
      * order og their fitness.
-     * 
+     *
      * @return The sorted list of individuals.
      */
 
     public ArrayList<Individual> getSortedIndividuals() {
-        
+
         ArrayList<Individual> sorted = new ArrayList<Individual>();
         sorted.addAll(individuals);
 
@@ -166,5 +172,5 @@ public class Population implements ICloneable
         }
 
     }
-    
+
 }

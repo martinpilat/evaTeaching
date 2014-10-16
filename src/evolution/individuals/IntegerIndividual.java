@@ -1,8 +1,6 @@
-package org.pikater.core.utilities.evolution.individuals;
+package evolution.individuals;
 
-import org.pikater.core.ontology.subtrees.newOption.values.IntegerValue;
-import org.pikater.core.ontology.subtrees.newOption.values.interfaces.IValueData;
-import org.pikater.core.utilities.evolution.RandomNumberGenerator;
+import evolution.RandomNumberGenerator;
 
 import java.util.Arrays;
 
@@ -11,7 +9,7 @@ import java.util.Arrays;
  *
  * @author Martin Pilat
  */
-public class IntegerIndividual extends ArrayIndividual{
+public class IntegerIndividual extends ArrayIndividual {
 
     int length = 0;
     int[] genes = null;
@@ -21,10 +19,11 @@ public class IntegerIndividual extends ArrayIndividual{
     /**
      * Creates an individual of specified length with the specified limits. The genes
      * are uninitialized.
+     *
      * @param length The length of the individual.
-     * @param min The minimum value in the individual.
-     * @param max The upper limit of the value of the individual (the maximum gene will
-     * be max - 1)
+     * @param min    The minimum value in the individual.
+     * @param max    The upper limit of the value of the individual (the maximum gene will
+     *               be max - 1)
      */
     public IntegerIndividual(int length, int min, int max) {
         this.length = length;
@@ -47,7 +46,7 @@ public class IntegerIndividual extends ArrayIndividual{
 
     /**
      * Returns the internall array.
-     * 
+     *
      * @return The internal integer array.
      */
     public int[] toIntArray() {
@@ -60,8 +59,8 @@ public class IntegerIndividual extends ArrayIndividual{
     }
 
     @Override
-    public void set(int n, IValueData o) {
-        genes[n] = ((IntegerValue) o).getValue();
+    public void set(int n, Object o) {
+        genes[n] = (Integer) o;
     }
 
     /**
@@ -77,7 +76,7 @@ public class IntegerIndividual extends ArrayIndividual{
     }
 
     @Override
-    public IntegerIndividual clone() {
+    public Object clone() {
 
         IntegerIndividual newBI = (IntegerIndividual) super.clone();
         newBI.genes = new int[genes.length];

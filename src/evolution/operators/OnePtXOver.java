@@ -23,7 +23,7 @@ public class OnePtXOver implements Operator {
      * 
      * @param prob the probability of crossover
      */
-    
+
     public OnePtXOver(double prob) {
         xOverProb = prob;
     }

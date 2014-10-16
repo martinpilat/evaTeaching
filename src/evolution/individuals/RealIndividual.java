@@ -1,8 +1,7 @@
-package org.pikater.core.utilities.evolution.individuals;
+package evolution.individuals;
 
-import org.pikater.core.ontology.subtrees.newOption.values.FloatValue;
-import org.pikater.core.ontology.subtrees.newOption.values.interfaces.IValueData;
-import org.pikater.core.utilities.evolution.RandomNumberGenerator;
+import evolution.RandomNumberGenerator;
+
 import java.util.Arrays;
 
 /**
@@ -20,10 +19,11 @@ public class RealIndividual extends ArrayIndividual {
     /**
      * Creates an individual of specified length with the specified limits. The genes
      * are uninitialized.
+     *
      * @param length The length of the individual.
-     * @param min The minimum value in the individual.
-     * @param max The upper limit of the value of the individual (the maximum gene will
-     * be max - 1)
+     * @param min    The minimum value in the individual.
+     * @param max    The upper limit of the value of the individual (the maximum gene will
+     *               be max - 1)
      */
     public RealIndividual(int length, double min, double max) {
         this.length = length;
@@ -70,8 +70,8 @@ public class RealIndividual extends ArrayIndividual {
     }
 
     @Override
-    public void set(int n, IValueData o) {
-        Double d = (double)((FloatValue) o).getValue();
+    public void set(int n, Object o) {
+        Double d = (Double) o;
         d = Math.max(d, min);
         d = Math.min(d, max);
         genes[n] = d;
@@ -85,13 +85,13 @@ public class RealIndividual extends ArrayIndividual {
     public void randomInitialization() {
 
         for (int i = 0; i < length; i++) {
-            genes[i] = (max-min)*RandomNumberGenerator.getInstance().nextDouble() + min;
+            genes[i] = (max - min) * RandomNumberGenerator.getInstance().nextDouble() + min;
         }
 
     }
 
     @Override
-    public RealIndividual clone() {
+    public Object clone() {
 
         RealIndividual newBI = (RealIndividual) super.clone();
         newBI.genes = new double[genes.length];

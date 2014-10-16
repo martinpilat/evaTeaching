@@ -1,4 +1,4 @@
-package org.pikater.core.utilities.evolution;
+package evolution;
 
 /**
  * A simple instance of the FitnessEvaluator class. It takes as a parameter
@@ -14,7 +14,7 @@ public class SimpleEvaluator implements FitnessEvaluator {
     /**
      * Creates a SimpleEvaluator which uses the fitness specified and assigns
      * the value provided by this fitness to all the individuals in the population.
-     * 
+     *
      * @param fitness The fitness which shall be used during the evaluation.
      */
 

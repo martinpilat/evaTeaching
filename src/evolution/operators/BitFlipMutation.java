@@ -23,7 +23,7 @@ public class BitFlipMutation implements Operator {
      * @param mutationProbability probability of mutating each individual
      * @param bitFlipProbability probability of flipping a bit in the mutated individual
      */
-    
+
     public BitFlipMutation(double mutationProbability, double bitFlipProbability) {
         this.mutationProbability = mutationProbability;
         this.bitFlipProbability = bitFlipProbability;

@@ -22,7 +22,7 @@ public class IntegerMutation implements Operator {
      * @param mutationProbability the probability of mutating an individual
      * @param geneChangeProbability the probability of changing a given gene in the mutated individual
      */
-    
+
     public IntegerMutation(double mutationProbability, double geneChangeProbability) {
         this.mutationProbability = mutationProbability;
         this.geneChangeProbability = geneChangeProbability;

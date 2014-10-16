@@ -1,6 +1,6 @@
-package org.pikater.core.utilities.evolution.selectors;
+package evolution.selectors;
 
-import org.pikater.core.utilities.evolution.Population;
+import evolution.Population;
 
 /**
  * Interface for all selections.
@@ -17,7 +17,7 @@ public interface Selector {
      * @param from the population from which to select
      * @param to the population to place the individuals to
      */
-	
-	public void select(int howMany, Population from, Population to);
+
+    public void select(int howMany, Population from, Population to);
 
 }

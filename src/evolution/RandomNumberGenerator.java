@@ -1,8 +1,9 @@
-package org.pikater.core.utilities.evolution;
+package evolution;
 
 import java.util.Random;
 
-/** Wrapper for the java.util.Random. Provides a singleton random number generator.
+/**
+ * Wrapper for the java.util.Random. Provides a singleton random number generator.
  *
  * @author Martin Pilat
  */
@@ -42,7 +43,6 @@ public class RandomNumberGenerator {
     }
 
     /**
-     *
      * @return A random double from the interval [0, 1) drawn from a uniform distribution.
      */
 
@@ -60,12 +60,15 @@ public class RandomNumberGenerator {
         return rnd.nextGaussian();
     }
 
-    /* write to static field from instance method
-     ** Sets a new seed for the random number generator.
+    /**
+     * Sets a new seed for the random number generator.
+     *
      * @param seed The seed which shall be set.
+     */
+
     public void reseed(long seed) {
         rnd = new Random(seed);
-    } */
+    }
 
     public Random getRandom() {
         return rnd;

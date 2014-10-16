@@ -37,6 +37,7 @@ public abstract class Individual implements Cloneable {
 
     /**
      * Returns the objective value of the individual.
+     *
      * @return The objective value of the individual.
      */
     public double getObjectiveValue() {
