@@ -2,8 +2,6 @@ package evolution.real.functions;
 
 import evolution.RandomNumberGenerator;
 
-import java.util.Arrays;
-
 /**
  * Created with IntelliJ IDEA.
  * User: Martin Pilat

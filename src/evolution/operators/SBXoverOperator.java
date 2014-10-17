@@ -72,7 +72,7 @@ public class SBXoverOperator implements Operator {
             double rand = RandomNumberGenerator.getInstance().nextDouble();
             double beta = 1.0 + (2.0 * (y1 - y_low) / (y2 - y1));
             double alpha = 2.0 - Math.pow(beta, -(ETA_C + 1.0));
-            double betaq = 0;
+            double betaq;
             if (rand <= (1.0 / alpha)) {
                 betaq = Math.pow((rand * alpha), (1.0 / (ETA_C + 1.0)));
             } else {

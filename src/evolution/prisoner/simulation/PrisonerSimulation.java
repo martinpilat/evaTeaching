@@ -86,8 +86,6 @@ public class PrisonerSimulation {
         ea.addEnvironmentalSelector(new TournamentSelector());
         ea.addOperator(new DummyOperator());
 
-        List chromosomes = new ArrayList();
-
         for (int i = 0; i < strategies.size(); i++) {
             for (int j = 0; j < strategyCounts.get(i); j++) {
 

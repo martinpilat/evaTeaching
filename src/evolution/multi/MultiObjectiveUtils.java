@@ -4,7 +4,6 @@ import evolution.Population;
 import evolution.individuals.Individual;
 import evolution.individuals.MultiRealIndividual;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -170,9 +169,9 @@ public class MultiObjectiveUtils {
      *
      * WARNING: Works only for bi-objective problems.
      *
-     * @param pop
-     * @param reference
-     * @return
+     * @param pop the input population
+     * @param reference the reference point
+     * @return the hypervolume of the population {@code pop} w.r.t to the reference point {@code reference}
      */
 
     public static double calculateHypervolume(Population pop, double[] reference) {

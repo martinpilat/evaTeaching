@@ -1,23 +1,17 @@
 package evolution.multi;
 
 import evolution.*;
-import evolution.individuals.Individual;
 import evolution.individuals.MultiRealIndividual;
 import evolution.individuals.RealIndividual;
 import evolution.multi.functions.*;
 import evolution.operators.AveragingCrossoverOperator;
 import evolution.operators.GaussianMutationOperator;
-import evolution.real.functions.*;
-import evolution.selectors.TournamentSelector;
 
 import java.io.*;
 import java.util.*;
 
 public class Multi {
 
-    /**
-     * @param args
-     */
     static int maxGen;
     static int popSize;
     static int dimension;

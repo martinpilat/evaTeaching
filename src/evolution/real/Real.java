@@ -1,23 +1,17 @@
 package evolution.real;
 
 import evolution.*;
-import evolution.individuals.Individual;
 import evolution.individuals.RealIndividual;
 import evolution.operators.AveragingCrossoverOperator;
 import evolution.operators.GaussianMutationOperator;
 import evolution.real.functions.*;
-import evolution.selectors.RouletteWheelSelector;
 import evolution.selectors.TournamentSelector;
 
-import javax.xml.soap.Detail;
 import java.io.*;
 import java.util.*;
 
 public class Real {
 
-    /**
-     * @param args
-     */
     static int maxGen;
     static int popSize;
     static int dimension;
@@ -182,7 +176,7 @@ public class Real {
         StringBuilder sb = new StringBuilder();
 
         for (double d: a) {
-            sb.append(String.format(Locale.US, "%.5f", d) + " ");
+            sb.append(String.format(Locale.US, "%.5f ", d));
         }
 
         return sb.toString();

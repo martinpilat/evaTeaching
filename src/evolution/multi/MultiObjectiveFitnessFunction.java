@@ -1,8 +1,6 @@
 package evolution.multi;
 
-import evolution.FitnessEvaluator;
 import evolution.FitnessFunction;
-import evolution.Population;
 import evolution.individuals.Individual;
 import evolution.individuals.MultiRealIndividual;
 import evolution.multi.functions.MultiObjectiveFunction;

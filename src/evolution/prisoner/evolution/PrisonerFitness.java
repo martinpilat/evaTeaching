@@ -50,8 +50,8 @@ public class PrisonerFitness implements FitnessFunction {
 
             for (int m = 0; m < iters; m++) {
 
-                Move s1Move = null;
-                Move s2Move = null;
+                Move s1Move;
+                Move s2Move;
 
                 s1Move = es.nextMove();
                 s2Move = s.nextMove();

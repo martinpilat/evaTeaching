@@ -10,8 +10,8 @@ import evolution.Population;
 public interface Selector {
 
     /**
-     * Performs the selection. Selects {@code howMany} individuals from the {@from} population and 
-     * places them to {@to} population.
+     * Performs the selection. Selects {@code howMany} individuals from the {@code from} population and
+     * places them to {@code to} population.
      * 
      * @param howMany number of individuals to select
      * @param from the population from which to select

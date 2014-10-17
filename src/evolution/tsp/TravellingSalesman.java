@@ -117,7 +117,7 @@ public class TravellingSalesman {
             //ensure all the individuals represent permutation
             for (int i = 0; i < pop.getPopulationSize(); i++) {
 
-                ArrayList rand = new ArrayList();
+                ArrayList<Integer> rand = new ArrayList<Integer>();
 
                 for (int j = 0; j < coords.size(); j++) {
                     rand.add(j);
@@ -148,7 +148,7 @@ public class TravellingSalesman {
                     used[g] = true;
                 }
 
-                Double diff = (Double) pop.getSortedIndividuals().get(0).getObjectiveValue();
+                Double diff = pop.getSortedIndividuals().get(0).getObjectiveValue();
                 System.out.println("Generation " + i + ": " + diff);
 
                 StatsLogger.logFitness(pop, out);
@@ -160,7 +160,7 @@ public class TravellingSalesman {
 
             BufferedReader rin = new BufferedReader(new FileReader("resources/kmlstart"));
 
-            String line = "";
+            String line;
 
             while ((line = rin.readLine()) != null) {
                 bestOut.write(line + System.getProperty("line.separator"));
@@ -177,8 +177,6 @@ public class TravellingSalesman {
             bestOut.write(" " + coords.get((Integer) bestInd.get(0)).toString() + System.getProperty("line.separator"));
 
             rin = new BufferedReader(new FileReader("resources/kmlend"));
-
-            line = "";
 
             while ((line = rin.readLine()) != null) {
                 bestOut.write(line);
