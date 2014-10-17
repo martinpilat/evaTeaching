@@ -1,6 +1,7 @@
 package evolution.multi;
 
 import evolution.*;
+import evolution.individuals.Individual;
 import evolution.individuals.MultiRealIndividual;
 import evolution.individuals.RealIndividual;
 import evolution.multi.functions.*;
@@ -52,10 +53,10 @@ public class Multi {
 
         ArrayList<MultiObjectiveFunction> mofs = new ArrayList<MultiObjectiveFunction>();
         mofs.add(new ZDT1());
-        mofs.add(new ZDT2());
+        /*mofs.add(new ZDT2());
         mofs.add(new ZDT3());
         mofs.add(new ZDT4());
-        mofs.add(new ZDT6());
+        mofs.add(new ZDT6());*/
 
 
         for (MultiObjectiveFunction mof : mofs) {
@@ -75,17 +76,24 @@ public class Multi {
                 outDir.mkdirs();
             }
 
+            List<Double> hypervols = new ArrayList<Double>();
+
             for (int i = 0; i < repeats; i++) {
                 RandomNumberGenerator.getInstance().reseed(i);
-                run(i, mof);
+                Double hv = run(i, mof);
+                hypervols.add(hv);
             }
 
             StatsLogger.processResults(fitnessFilePrefix, fitnessStatsFile, repeats, maxGen, popSize);
             StatsLogger.processResults(objectiveFilePrefix, objectiveStatsFile, repeats, maxGen, popSize);
+
+            for (int i = 0; i < hypervols.size(); i++) {
+                System.out.println("run " + i + ": hypervolumeDifference=" + hypervols.get(i));
+            }
         }
     }
 
-    static void run(int number, MultiObjectiveFunction mof) {
+    static double run(int number, MultiObjectiveFunction mof) {
 
         try {
 
@@ -130,10 +138,12 @@ public class Multi {
             fitnessOut.close();
             objectiveOut.close();
             bestOut.close();
+
+            return hypervolume;
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
+        return Double.NaN;
     }
 }

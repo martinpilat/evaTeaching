@@ -1,15 +1,13 @@
 package evolution.tsp;
 
 import evolution.*;
+import evolution.individuals.Individual;
 import evolution.individuals.IntegerIndividual;
 import evolution.operators.SwappingMutationOperator;
 import evolution.selectors.TournamentSelector;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 public class TravellingSalesman {
 
@@ -30,10 +28,11 @@ public class TravellingSalesman {
     static String fitnessFilePrefix;
     static String fitnessStatsFile;
     static String detailsLogPrefix;
+    static Properties prop;
 
     public static void main(String[] args) {
 
-        Properties prop = new Properties();
+        prop = new Properties();
         try {
             InputStream propIn = new FileInputStream("properties/ga-tsp.properties");
             prop.load(propIn);
@@ -85,8 +84,15 @@ public class TravellingSalesman {
         }
 
 
+        List<Individual> bestInds = new ArrayList<Individual>();
+
         for (int i = 0; i < repeats; i++) {
-            run(i);
+            Individual best = run(i);
+            bestInds.add(best);
+        }
+
+        for (int i = 0; i < bestInds.size(); i++) {
+            System.out.println("run " + i + ": best objective=" + bestInds.get(i).getObjectiveValue());
         }
 
         StatsLogger.processResults(fitnessFilePrefix, fitnessStatsFile, repeats, maxGen, popSize);
@@ -94,7 +100,12 @@ public class TravellingSalesman {
 
     }
 
-    static void run(int number) {
+    static Individual run(int number) {
+
+        //Initialize logging of the run
+
+        DetailsLogger.startNewLog(detailsLogPrefix + "." + number + ".xml");
+        DetailsLogger.logParams(prop);
 
         RandomNumberGenerator.getInstance().reseed(number);
 
@@ -187,10 +198,16 @@ public class TravellingSalesman {
             progOut.close();
             bestOut.close();
 
+            DetailsLogger.writeLog();
+
+            return bestInd;
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 }

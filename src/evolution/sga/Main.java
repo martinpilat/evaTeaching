@@ -9,6 +9,7 @@ import evolution.selectors.RouletteWheelSelector;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -72,12 +73,19 @@ public class Main {
 
         //Run the algorithm
 
+        List<Individual> bestInds = new ArrayList<Individual>();
+
         for (int i = 0; i < repeats; i++) {
-            run(i);
+            Individual best = run(i);
+            bestInds.add(best);
         }
 
         StatsLogger.processResults(fitnessFilePrefix, fitnessStatsFile, repeats, maxGen, popSize);
         StatsLogger.processResults(objectiveFilePrefix, objectiveStatsFile, repeats, maxGen, popSize);
+
+        for (int i = 0; i < bestInds.size(); i++) {
+            System.out.println("run " + i + ": best objective=" + bestInds.get(i).getObjectiveValue() + " ind:" + bestInds.get(i));
+        }
 
     }
 
@@ -88,7 +96,7 @@ public class Main {
      */
 
 
-    public static void run(int number) {
+    public static Individual run(int number) {
 
         //Initialize logging of the run
 
@@ -112,7 +120,6 @@ public class Main {
         ea.addMatingSelector(new RouletteWheelSelector());
         ea.addOperator(new OnePtXOver(xoverProb));
         ea.addOperator(new BitFlipMutation(mutProb, mutProbPerBit));
-
 
         //Run the algorithm
 
@@ -141,11 +148,13 @@ public class Main {
             out.close();
             progOut.close();
             bestOut.close();
+
+            DetailsLogger.writeLog();
+
+            return bestInd;
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        DetailsLogger.writeLog();
-
+         return null;
     }
 }

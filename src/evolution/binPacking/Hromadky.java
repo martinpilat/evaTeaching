@@ -8,9 +8,7 @@ import evolution.operators.OnePtXOver;
 import evolution.selectors.RouletteWheelSelector;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 public class Hromadky {
 
@@ -91,9 +89,18 @@ public class Hromadky {
             e.printStackTrace();
         }
 
+        List<Individual> bestInds = new ArrayList<Individual>();
 
         for (int i = 0; i < repeats; i++) {
-            run(i);
+            Individual best = run(i);
+            bestInds.add(best);
+        }
+
+        HromadkyFitness fitness = new HromadkyFitness(weights, K);
+
+        for (int i = 0; i < bestInds.size(); i++) {
+            System.out.println("run " + i + ": best objective=" + bestInds.get(i).getObjectiveValue() +
+                    " weights:" + Arrays.toString(fitness.getBinWeights(bestInds.get(i))));
         }
 
         StatsLogger.processResults(fitnessFilePrefix, fitnessStatsFile, repeats, maxGen, popSize);
@@ -101,7 +108,7 @@ public class Hromadky {
 
     }
 
-    static void run(int number) {
+    static Individual run(int number) {
 
         try {
 
@@ -151,10 +158,14 @@ public class Hromadky {
             progOut.close();
             bestOut.close();
 
+            DetailsLogger.writeLog();
+
+            return bestInd;
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        DetailsLogger.writeLog();
+        return null;
     }
 }

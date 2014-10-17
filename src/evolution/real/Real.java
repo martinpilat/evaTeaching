@@ -1,6 +1,7 @@
 package evolution.real;
 
 import evolution.*;
+import evolution.individuals.Individual;
 import evolution.individuals.RealIndividual;
 import evolution.operators.AveragingCrossoverOperator;
 import evolution.operators.GaussianMutationOperator;
@@ -101,19 +102,32 @@ public class Real {
                 outDir.mkdirs();
             }
 
+            List<Individual> bestInds = new ArrayList<Individual>();
+
             for (int i = 0; i < repeats; i++) {
                 RandomNumberGenerator.getInstance().reseed(i);
                 rf.reinit();
-                run(i, rf);
+                Individual best = run(i, rf);
+                bestInds.add(best);
             }
 
             StatsLogger.processResults(fitnessFilePrefix, fitnessStatsFile, repeats, maxGen, popSize);
             StatsLogger.processResults(objectiveFilePrefix, objectiveStatsFile, repeats, maxGen, popSize);
+
+            for (int i = 0; i < bestInds.size(); i++) {
+                System.out.println("run " + i + ": best objective=" + bestInds.get(i).getObjectiveValue());
+            }
+
         }
 
     }
 
-    static void run(int number, RealFunction rf) {
+    static Individual run(int number, RealFunction rf) {
+
+        //Initialize logging of the run
+
+        DetailsLogger.startNewLog(detailsLogPrefix + "." + number + ".xml");
+        DetailsLogger.logParams(prop);
 
         try {
 
@@ -165,10 +179,16 @@ public class Real {
             fitnessOut.close();
             objectiveOut.close();
             bestOut.close();
+
+            DetailsLogger.writeLog();
+
+            return ri;
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        return null;
 
     }
 
