@@ -17,11 +17,10 @@ public class Checker {
 
             String line;
             while ((line = in.readLine()) != null) {
-                Scanner lineScanner = new Scanner(line);
-                lineScanner.useDelimiter(" ");
+                String[] nums = line.split(" ");
 
-                double weight = lineScanner.nextDouble();
-                int bin = lineScanner.nextInt();
+                double weight = Double.parseDouble(nums[0]);
+                int bin = Integer.parseInt(nums[1]);
 
                 vahy[bin] += weight;
             }
@@ -37,6 +36,7 @@ public class Checker {
             }
 
             System.out.println("difference: " + (max - min));
+            in.close();
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
