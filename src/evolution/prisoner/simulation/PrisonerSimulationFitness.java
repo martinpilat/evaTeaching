@@ -1,6 +1,8 @@
 package evolution.prisoner.simulation;
 
+import evolution.FitnessEvaluator;
 import evolution.FitnessFunction;
+import evolution.Population;
 import evolution.prisoner.Result;
 import evolution.prisoner.Strategy;
 import evolution.prisoner.Strategy.Move;
@@ -10,7 +12,7 @@ import evolution.individuals.IntegerIndividual;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PrisonerSimulationFitness implements FitnessFunction {
+public class PrisonerSimulationFitness implements FitnessEvaluator {
     ArrayList<Strategy> strategies;
     Random rnd = new Random();
     int maxEncounters;
@@ -33,22 +35,37 @@ public class PrisonerSimulationFitness implements FitnessFunction {
         return moves;
     }
 
+    @Override
+    public void evaluate(Population pop) {
 
-    public double evaluate(Individual ind) {
+        for (int i = 0; i < pop.getPopulationSize(); i++) {
+            double fitness = evaluate(pop.get(i), pop);
+            pop.get(i).setFitnessValue(fitness);
+        }
 
-        IntegerIndividual iind = (IntegerIndividual) ind;
-        Strategy es = strategies.get((Integer) iind.get(0));
+    }
+
+    public double evaluate(Individual ind, Population pop) {
 
         int score = 0;
 
         for (int i = 0; i < maxEncounters; i++) {
-            Strategy s = strategies.get(rnd.nextInt(strategies.size()));
+
+            IntegerIndividual op = (IntegerIndividual) pop.get(rnd.nextInt(pop.getPopulationSize()));
+            IntegerIndividual iind = (IntegerIndividual) ind;
+            Strategy indS = null;
+            Strategy opS = null;
+            try {
+                indS = strategies.get((Integer) iind.get(0)).getClass().newInstance();
+                opS = strategies.get((Integer) op.get(0)).getClass().newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
 
             int sc1 = 0;
             int sc2 = 0;
-
-            String str1 = "";
-            String str2 = "";
 
             int iters = 150 + rnd.nextInt(100);
 
@@ -57,19 +74,16 @@ public class PrisonerSimulationFitness implements FitnessFunction {
                 Move s1Move = null;
                 Move s2Move = null;
                 try {
-                    s1Move = es.nextMove();
+                    s1Move = indS.nextMove();
 
                 } catch (Exception e) {
                     sc1 = 0;
                 }
                 try {
-                    s2Move = s.nextMove();
+                    s2Move = opS.nextMove();
                 } catch (Exception e) {
                     sc2 = 0;
                 }
-
-                str1 += (s1Move == null) ? "E" : s1Move.getLabel();
-                str2 += (s2Move == null) ? "E" : s2Move.getLabel();
 
                 Result r1 = new Result(s1Move, s2Move);
                 Result r2 = new Result(s2Move, s1Move);
@@ -78,21 +92,23 @@ public class PrisonerSimulationFitness implements FitnessFunction {
                 sc2 += r2.getMyScore();
 
                 try {
-                    es.reward(r1);
+                    indS.reward(r1);
                 } catch (Exception e) {
                     sc1 = 0;
                 }
                 try {
-                    s.reward(r2);
+                    opS.reward(r2);
                 } catch (Exception e) {
                     sc2 = 0;
                 }
 
             }
+
             score += sc1;
 
         }
-        iind.setObjectiveValue(score);
+        ind.setObjectiveValue(score);
+
         return score;
     }
 }

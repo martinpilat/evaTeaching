@@ -6,6 +6,7 @@ import evolution.Population;
 import evolution.prisoner.Strategy;
 import evolution.individuals.Individual;
 import evolution.individuals.IntegerIndividual;
+import evolution.selectors.RouletteWheelSelector;
 import evolution.selectors.TournamentSelector;
 
 import java.io.*;
@@ -82,8 +83,8 @@ public class PrisonerSimulation {
         pop.setPopulationSize(popSize);
 
         EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
-        ea.setFitnessFunction(new PrisonerSimulationFitness(strategies, maxEncounters));
-        ea.addEnvironmentalSelector(new TournamentSelector());
+        ea.setFitnessEvaluator(new PrisonerSimulationFitness(strategies, maxEncounters));
+        ea.addEnvironmentalSelector(new RouletteWheelSelector());
         ea.addOperator(new DummyOperator());
 
         for (int i = 0; i < strategies.size(); i++) {

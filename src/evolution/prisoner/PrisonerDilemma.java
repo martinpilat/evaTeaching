@@ -10,7 +10,8 @@ public class PrisonerDilemma {
     public static void main(String[] args) {
 
         //change this to wherever your .class files are
-        File dir = new File("out/production/evaTeaching/evolution/prisoner/strategies/");
+        //File dir = new File("out/production/evaTeaching/evolution/prisoner/strategies/");
+        File dir = new File("bin/evolution/prisoner/strategies/");
 
         String[] stratNames = dir.list();
 
@@ -38,7 +39,7 @@ public class PrisonerDilemma {
 
         int[] scores = new int[strategies.length];
 
-        for (int r = 0; r < 10; r++) {
+        for (int r = 0; r < 1000; r++) {
             for (int i = 0; i < strategies.length; i++) {
                 for (int j = 0; j < strategies.length; j++) {
 
@@ -56,7 +57,7 @@ public class PrisonerDilemma {
                     String str1 = "";
                     String str2 = "";
 
-                    int stop = RandomNumberGenerator.getInstance().nextInt(101) + 200;
+                    int stop = RandomNumberGenerator.getInstance().nextInt(101) + 800;
                     for (int m = 0; m < stop; m++) {
 
                         Move s1Move = s1.nextMove();
