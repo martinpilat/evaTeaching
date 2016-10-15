@@ -1,0 +1,7 @@
+apply plugin: 'application'
+
+// this project uses non-standard layout
+sourceSets{main{java{srcDir 'src'}}}
+
+mainClassName = 'evolution.sga.Main'
+
