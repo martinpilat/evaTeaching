@@ -40,8 +40,6 @@ public class PrisonerFitness implements FitnessFunction {
 
         for (Strategy s : strategies) {
 
-            s.reset();
-
             int sc1 = 0;
 
             int iters = 150 + rnd.nextInt(100);
@@ -73,6 +71,7 @@ public class PrisonerFitness implements FitnessFunction {
             }
 
             score += sc1;
+            s.reset();
 
         }
 

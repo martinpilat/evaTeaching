@@ -45,6 +45,10 @@ public class DetailsLogger {
         disableLog = false;
     }
 
+    public static boolean isEnabled() {
+        return !disableLog;
+    }
+
     public static void startNewLog(String fileName) {
 
         if (disableLog)

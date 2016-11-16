@@ -182,17 +182,20 @@ public class EvolutionaryAlgorithm {
 
         DetailsLogger.logSelectedPart(parents);
 
-
-        fitness.evaluate(matingPool); //just for logging
-        DetailsLogger.logMatingPool(matingPool);
+        if (DetailsLogger.isEnabled()) {
+            fitness.evaluate(matingPool); //just for logging
+            DetailsLogger.logMatingPool(matingPool);
+        }
 
         Population offspring = null;
         for (Operator o : operators) {
             DetailsLogger.logNewOperator(o.getClass().getCanonicalName());
             offspring = new Population();
             o.operate(matingPool, offspring);
-            fitness.evaluate(offspring); //just for logging
-            DetailsLogger.logOffspring(offspring);
+            if (DetailsLogger.isEnabled()) {
+                fitness.evaluate(offspring); //just for logging
+                DetailsLogger.logOffspring(offspring);
+            }
             matingPool = offspring;
         }
 
