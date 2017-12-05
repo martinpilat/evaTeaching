@@ -2,13 +2,10 @@ package evolution.prisoner;
 
 import evolution.RandomNumberGenerator;
 import evolution.prisoner.Strategy.Move;
-import jdk.nashorn.internal.ir.debug.JSONWriter;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PrisonerDilemma {
 

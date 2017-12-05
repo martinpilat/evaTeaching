@@ -145,7 +145,7 @@ public class Population implements Cloneable {
 
     /**
      * Returns all the individuals in the population as a list sorted in descending
-     * order og their fitness.
+     * order of their fitness.
      *
      * @return The sorted list of individuals.
      */
@@ -164,11 +164,7 @@ public class Population implements Cloneable {
     class FitnessFunctionComparator implements Comparator<Individual> {
 
         public int compare(Individual o1, Individual o2) {
-            if (o1.getFitnessValue() > o2.getFitnessValue())
-                return -1;
-            if (o1.getFitnessValue() == o2.getFitnessValue())
-                return 0;
-            return 1;
+            return -Double.compare(o1.getFitnessValue(), o2.getFitnessValue());
         }
 
     }

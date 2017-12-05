@@ -166,7 +166,7 @@ public class EvolutionaryAlgorithm {
             int missing = parents.getPopulationSize() - matingPool.getPopulationSize();
             if (missing > 0) {
                 Population sel = new Population();
-                matingSelectors.get(matingSelectors.size() - 1).select(toSelect, parents, sel);
+                matingSelectors.get(matingSelectors.size() - 1).select(missing, parents, sel);
                 matingPool.addAll((Population) sel.clone());
                 for (int i = matingPool.getPopulationSize() - missing; i < matingPool.getPopulationSize(); i++) {
                     matingPool.get(i).setLogNotes(matingSelectors.get(matingSelectors.size() - 1).getClass().getCanonicalName());
@@ -231,7 +231,7 @@ public class EvolutionaryAlgorithm {
             int missing = parents.getPopulationSize() - selected.getPopulationSize();
             if (missing > 0) {
                 Population sel = new Population();
-                environmentalSelectors.get(environmentalSelectors.size() - 1).select(toSelect, combined, sel);
+                environmentalSelectors.get(environmentalSelectors.size() - 1).select(missing, combined, sel);
                 selected.addAll((Population) sel.clone());
             }
         }
