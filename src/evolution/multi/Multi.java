@@ -18,6 +18,7 @@ public class Multi {
     static int dimension;
     static double xoverProb;
     static double mutProb;
+    static double mutProbPerBit;
     static double mutSigma;
     static String logFilePrefix;
     static int repeats;
@@ -44,6 +45,7 @@ public class Multi {
         popSize = Integer.parseInt(prop.getProperty("ea.popSize", "30"));
         xoverProb = Double.parseDouble(prop.getProperty("ea.xoverProb", "0.8"));
         mutProb = Double.parseDouble(prop.getProperty("ea.mutProb", "0.05"));
+        mutProbPerBit = Double.parseDouble(prop.getProperty("ea.mutProbPerBit", "1.0"));
         mutSigma = Double.parseDouble(prop.getProperty("ea.mutSigma", "0.04"));
 
         dimension = Integer.parseInt(prop.getProperty("prob.dimension", "25"));
@@ -106,7 +108,7 @@ public class Multi {
 
             EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
             ea.addOperator(new AveragingCrossoverOperator(xoverProb));
-            ea.addOperator(new GaussianMutationOperator(mutProb, mutSigma));
+            ea.addOperator(new GaussianMutationOperator(mutProb, mutProbPerBit, mutSigma));
             ea.setFitnessFunction(new MultiObjectiveFitnessFunction(mof));
             ea.addEnvironmentalSelector(new NSGA2Selector());
             ea.setReplacement(new MergingReplacement());
