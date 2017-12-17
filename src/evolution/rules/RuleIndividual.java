@@ -37,7 +37,7 @@ public class RuleIndividual extends ArrayIndividual {
 
     @Override
     public int length() {
-        return 0;
+        return this.rules.size();
     }
 
     public ArrayList<Rule> getRules() {
