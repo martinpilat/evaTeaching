@@ -16,6 +16,6 @@ public interface FitnessEvaluator {
      */
 
     public void evaluate(Population pop);
-
+    public void setCores(int cores);
 
 }

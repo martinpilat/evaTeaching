@@ -5,6 +5,7 @@ import evolution.individuals.Individual;
 import evolution.selectors.TournamentSelector;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public class RulesMain {
@@ -30,6 +31,7 @@ public class RulesMain {
     static String detailsLogPrefix;
     static ArrayList<double[]> attrs;
     static ArrayList<Integer> targets;
+    static int cpu_cores;
 
     static double[] lb;
     static double[] ub;
@@ -39,8 +41,9 @@ public class RulesMain {
     public static void main(String[] args) {
 
         prop = new Properties();
+        String propertiesFile = "properties/ga-rules.properties";
         try {
-            InputStream propIn = new FileInputStream("properties/ga-rules.properties");
+            InputStream propIn = new FileInputStream(propertiesFile);
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,6 +58,7 @@ public class RulesMain {
         eliteSize = Double.parseDouble(prop.getProperty("ea.eliteSize", "0.1"));
         maxRules = Integer.parseInt(prop.getProperty("ea.maxRules", "10"));
         inputFile = prop.getProperty("prob.inputFile", "resources/iris.csv");
+        cpu_cores = Integer.parseInt(prop.getProperty("xset.cpu_cores", "1"));
 
         repeats = Integer.parseInt(prop.getProperty("xset.repeats", "10"));
 
@@ -117,6 +121,12 @@ public class RulesMain {
             outDir.mkdirs();
         }
 
+        try {
+            Files.copy(new File(propertiesFile).toPath(), new File(path + ".properties").toPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         List<Individual> bestInds = new ArrayList<Individual>();
 
         for (int i = 0; i < repeats; i++) {
@@ -151,6 +161,7 @@ public class RulesMain {
             pop.createRandomInitialPopulation();
 
             EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
+            ea.setCPUCores(cpu_cores);
             ea.addOperator(new RulesCrossoverOperator(xoverProb));
             ea.addOperator(new ConditionMutationOperator(mutProb, mutProbPerBit, mutSigma));
             ea.addOperator(new ClassChangeMutationOperator(mutProb, mutProbPerBit, 3));

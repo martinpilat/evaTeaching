@@ -23,6 +23,7 @@ public class EvolutionaryAlgorithm {
     FitnessEvaluator fitness;
     Replacement replacement;
     int generationNo = 0;
+    int cpu_cores = 1;
 
     /**
      * Initializes an empty evolutionary algorithm. Replacement is set to the
@@ -33,6 +34,19 @@ public class EvolutionaryAlgorithm {
         matingSelectors = new ArrayList<Selector>();
         environmentalSelectors = new ArrayList<Selector>();
         replacement = new SGAReplacement();
+    }
+
+    /**
+     * Sets the number of CPU cores to use for fitness evaluation
+     *
+     * @param cpu_cores The number of CPU cores
+     */
+
+    public void setCPUCores(int cpu_cores) {
+        this.cpu_cores = cpu_cores;
+        if (fitness != null) {
+            fitness.setCores(cpu_cores);
+        }
     }
 
     /**
@@ -91,7 +105,7 @@ public class EvolutionaryAlgorithm {
      * @param f The fitness function which shall be used.
      */
     public void setFitnessFunction(FitnessFunction f) {
-        fitness = new SimpleEvaluator(f);
+        fitness = new SimpleEvaluator(f, this.cpu_cores);
     }
 
     /**

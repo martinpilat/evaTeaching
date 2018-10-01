@@ -6,12 +6,12 @@ import evolution.individuals.IntegerIndividual;
 
 import java.util.Vector;
 
-public class HromadkyFitness implements FitnessFunction {
+public class BinPackingFitness implements FitnessFunction {
 
     Vector<Double> weights;
     int K;
 
-    public HromadkyFitness(Vector<Double> weights, int K) {
+    public BinPackingFitness(Vector<Double> weights, int K) {
         this.weights = weights;
         this.K = K;
     }

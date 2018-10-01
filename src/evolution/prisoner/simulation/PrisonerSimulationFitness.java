@@ -45,6 +45,9 @@ public class PrisonerSimulationFitness implements FitnessEvaluator {
 
     }
 
+    public void setCores(int cores) { //ignore setting number of cores for now
+    }
+
     public double evaluate(Individual ind, Population pop) {
 
         int score = 0;

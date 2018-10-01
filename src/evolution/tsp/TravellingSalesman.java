@@ -7,6 +7,7 @@ import evolution.operators.SwappingMutationOperator;
 import evolution.selectors.TournamentSelector;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public class TravellingSalesman {
@@ -29,12 +30,14 @@ public class TravellingSalesman {
     static String fitnessStatsFile;
     static String detailsLogPrefix;
     static Properties prop;
+    static int cpu_cores;
 
     public static void main(String[] args) {
 
         prop = new Properties();
+        String propertiesFile = "properties/ga-tsp.properties";
         try {
-            InputStream propIn = new FileInputStream("properties/ga-tsp.properties");
+            InputStream propIn = new FileInputStream(propertiesFile);
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
@@ -51,6 +54,7 @@ public class TravellingSalesman {
 
         repeats = Integer.parseInt(prop.getProperty("xset.repeats", "10"));
         enableDetailsLog = prop.getProperty("xlog.detailsLog", "enabled");
+        cpu_cores = Integer.parseInt(prop.getProperty("xset.cpu_cores", "8"));
 
         if (!enableDetailsLog.equals("enabled")) {
             DetailsLogger.disableLog();
@@ -68,6 +72,12 @@ public class TravellingSalesman {
 
         File output = new File(outputDirectory);
         output.mkdirs();
+
+        try {
+            Files.copy(new File(propertiesFile).toPath(), new File(path + ".properties").toPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         coords = new Vector<Coordinates>();
         try {
@@ -118,6 +128,7 @@ public class TravellingSalesman {
             pop.setPopulationSize(popSize);
 
             EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
+            ea.setCPUCores(cpu_cores);
             ea.setFitnessFunction(new TSPFitness(coords));
             ea.addOperator(new SwappingMutationOperator(mutProb, mutProbPerBit));
             ea.addEnvironmentalSelector(new TournamentSelector());

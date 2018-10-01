@@ -9,6 +9,7 @@ import evolution.operators.AveragingCrossoverOperator;
 import evolution.operators.GaussianMutationOperator;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public class Multi {
@@ -30,12 +31,14 @@ public class Multi {
     static String fitnessFilePrefix;
     static String fitnessStatsFile;
     static String detailsLogPrefix;
+    static int cpu_cores;
 
     public static void main(String[] args) {
 
+        String propertiesFile = "properties/ga-multi.properties";
         prop = new Properties();
         try {
-            InputStream propIn = new FileInputStream("properties/ga-multi.properties");
+            InputStream propIn = new FileInputStream(propertiesFile);
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
@@ -47,6 +50,7 @@ public class Multi {
         mutProb = Double.parseDouble(prop.getProperty("ea.mutProb", "0.05"));
         mutProbPerBit = Double.parseDouble(prop.getProperty("ea.mutProbPerBit", "1.0"));
         mutSigma = Double.parseDouble(prop.getProperty("ea.mutSigma", "0.04"));
+        cpu_cores = Integer.parseInt(prop.getProperty("xset.cpu_cores", "1"));
 
         dimension = Integer.parseInt(prop.getProperty("prob.dimension", "25"));
         repeats = Integer.parseInt(prop.getProperty("xset.repeats", "10"));
@@ -78,6 +82,12 @@ public class Multi {
                 outDir.mkdirs();
             }
 
+            try {
+                Files.copy(new File(propertiesFile).toPath(), new File(path + ".properties").toPath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             List<Double> hypervols = new ArrayList<Double>();
 
             for (int i = 0; i < repeats; i++) {
@@ -107,6 +117,7 @@ public class Multi {
             pop.createRandomInitialPopulation();
 
             EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
+            ea.setCPUCores(cpu_cores);
             ea.addOperator(new AveragingCrossoverOperator(xoverProb));
             ea.addOperator(new GaussianMutationOperator(mutProb, mutProbPerBit, mutSigma));
             ea.setFitnessFunction(new MultiObjectiveFitnessFunction(mof));

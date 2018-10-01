@@ -8,9 +8,10 @@ import evolution.operators.OnePtXOver;
 import evolution.selectors.RouletteWheelSelector;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
-public class Hromadky {
+public class BinPacking {
 
     static int maxGen;
     static int popSize;
@@ -30,6 +31,7 @@ public class Hromadky {
     private static String detailsLogPrefix;
     private static String enableDetailsLog;
     private static Properties prop;
+    static int cpu_cores;
 
     /**
      * @param args
@@ -37,9 +39,11 @@ public class Hromadky {
 
     public static void main(String[] args) {
 
+        String propertiesFile = "properties/ga-binPacking.properties";
+
         prop = new Properties();
         try {
-            InputStream propIn = new FileInputStream("properties/ga-binPacking.properties");
+            InputStream propIn = new FileInputStream(propertiesFile);
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,6 +59,7 @@ public class Hromadky {
         K = Integer.parseInt(prop.getProperty("prob.numBins", "10"));
 
         repeats = Integer.parseInt(prop.getProperty("xset.repeats", "10"));
+        cpu_cores = Integer.parseInt(prop.getProperty("xset.cpu_cores", "1"));
 
 
         enableDetailsLog = prop.getProperty("xlog.detailsLog", "enabled");
@@ -76,6 +81,12 @@ public class Hromadky {
         File output = new File(outputDirectory);
         output.mkdirs();
 
+        try {
+            Files.copy(new File(propertiesFile).toPath(), new File(path + ".properties").toPath());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         weights = new Vector<Double>();
         try {
             BufferedReader in = new BufferedReader(new FileReader(inputFile));
@@ -96,7 +107,7 @@ public class Hromadky {
             bestInds.add(best);
         }
 
-        HromadkyFitness fitness = new HromadkyFitness(weights, K);
+        BinPackingFitness fitness = new BinPackingFitness(weights, K);
 
         for (int i = 0; i < bestInds.size(); i++) {
             System.out.println("run " + i + ": best objective=" + bestInds.get(i).getObjectiveValue() +
@@ -124,8 +135,9 @@ public class Hromadky {
             pop.setSampleIndividual(sampleIndividual);
             pop.createRandomInitialPopulation();
 
+            BinPackingFitness fitness = new BinPackingFitness(weights, K);
             EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
-            HromadkyFitness fitness = new HromadkyFitness(weights, K);
+            ea.setCPUCores(cpu_cores);
             ea.setFitnessFunction(fitness);
             ea.addMatingSelector(new RouletteWheelSelector());
             ea.addOperator(new OnePtXOver(xoverProb));

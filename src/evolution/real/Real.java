@@ -9,6 +9,7 @@ import evolution.real.functions.*;
 import evolution.selectors.TournamentSelector;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public class Real {
@@ -35,12 +36,14 @@ public class Real {
     static String fitnessFilePrefix;
     static String fitnessStatsFile;
     static String detailsLogPrefix;
+    static int cpu_cores;
 
     public static void main(String[] args) {
 
         prop = new Properties();
+        String propertiesFile = "properties/ga-real.properties";
         try {
-            InputStream propIn = new FileInputStream("properties/ga-real.properties");
+            InputStream propIn = new FileInputStream(propertiesFile);
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
@@ -56,6 +59,7 @@ public class Real {
 
         dimension = Integer.parseInt(prop.getProperty("prob.dimension", "25"));
         repeats = Integer.parseInt(prop.getProperty("xset.repeats", "10"));
+        cpu_cores = Integer.parseInt(prop.getProperty("xset.cpu_cores", "1"));
 
         ArrayList<RealFunction> functions = new ArrayList<RealFunction>();
         functions.add(new F01SphereFunction(dimension));
@@ -102,6 +106,12 @@ public class Real {
                 outDir.mkdirs();
             }
 
+            try {
+                Files.copy(new File(propertiesFile).toPath(), new File(path + ".properties").toPath());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             List<Individual> bestInds = new ArrayList<Individual>();
 
             for (int i = 0; i < repeats; i++) {
@@ -139,6 +149,7 @@ public class Real {
             pop.createRandomInitialPopulation();
 
             EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
+            ea.setCPUCores(cpu_cores);
             ea.addMatingSelector(new MySelector());
             ea.addOperator(new AveragingCrossoverOperator(xoverProb));
             ea.addOperator(new GaussianMutationOperator(mutProb, mutProbPerBit, mutSigma));

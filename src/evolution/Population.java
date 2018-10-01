@@ -5,6 +5,7 @@ import evolution.individuals.Individual;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.stream.Stream;
 
 /**
  * A container which contains the individuals of a population.
@@ -161,6 +162,10 @@ public class Population implements Cloneable {
 
     }
 
+    public Stream<Individual> stream() {
+        return individuals.stream();
+    }
+
     class FitnessFunctionComparator implements Comparator<Individual> {
 
         public int compare(Individual o1, Individual o2) {
@@ -168,5 +173,6 @@ public class Population implements Cloneable {
         }
 
     }
+
 
 }

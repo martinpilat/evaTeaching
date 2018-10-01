@@ -6,8 +6,10 @@ import evolution.individuals.Individual;
 import evolution.operators.BitFlipMutation;
 import evolution.operators.OnePtXOver;
 import evolution.selectors.RouletteWheelSelector;
+import evolution.selectors.TournamentSelector;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -32,13 +34,15 @@ public class Main {
     static String logFilePrefix;
     static String detailsLogPrefix;
     static int repeats;
+    static int cpu_cores;
     static Properties prop;
 
     public static void main(String[] args) {
 
         prop = new Properties();
+        String propertiesFile = "properties/ga-sga.properties";
         try {
-            InputStream propIn = new FileInputStream("properties/ga-sga.properties");
+            InputStream propIn = new FileInputStream(propertiesFile);
             prop.load(propIn);
         } catch (IOException e) {
             e.printStackTrace();
@@ -55,6 +59,7 @@ public class Main {
         dimension = Integer.parseInt(prop.getProperty("prob.dimension", "25"));
 
         repeats = Integer.parseInt(prop.getProperty("xset.repeats", "10"));
+        cpu_cores = Integer.parseInt(prop.getProperty("xset.cpu_cores", "1"));
 
         outputDirectory = prop.getProperty("xlog.outputDirectory", "sga");
         logFilePrefix = prop.getProperty("xlog.filePrefix", "log");
@@ -69,6 +74,12 @@ public class Main {
         File outDir = new File(outputDirectory);
         if (!outDir.exists()) {
             outDir.mkdirs();
+        }
+
+        try {
+            Files.copy(new File(propertiesFile).toPath(), new File(path + ".properties").toPath());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         //Run the algorithm
@@ -116,6 +127,7 @@ public class Main {
 
         //Set the options for the evolutionary algorithm
         EvolutionaryAlgorithm ea = new EvolutionaryAlgorithm();
+        ea.setCPUCores(cpu_cores);
         ea.setFitnessFunction(new ExampleFitnessFunction());
         ea.addMatingSelector(new RouletteWheelSelector());
         ea.addOperator(new OnePtXOver(xoverProb));
