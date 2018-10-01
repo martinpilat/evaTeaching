@@ -30,7 +30,7 @@ public class ConditionMutationOperator implements Operator{
 
             if (rng.nextDouble() < mutProb) {
                 for (int j = 0; j < o1.length(); j++) {
-                    for (int k = 0; k < o1.getRules().size(); k++)
+                    for (int k = 0; k < o1.getRules().get(j).getConditions().size(); k++)
                     if (rng.nextDouble() < mutProbPerBit) {
                         o1.getRules().get(j).getConditions().get(k).mutate(mutSigma);
                     }
