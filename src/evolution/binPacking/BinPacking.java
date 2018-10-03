@@ -9,6 +9,7 @@ import evolution.selectors.RouletteWheelSelector;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 public class BinPacking {
@@ -82,7 +83,8 @@ public class BinPacking {
         output.mkdirs();
 
         try {
-            Files.copy(new File(propertiesFile).toPath(), new File(path + ".properties").toPath());
+            Files.copy(new File(propertiesFile).toPath(), new File(path + ".properties").toPath(),
+                       StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
             e.printStackTrace();
         }
